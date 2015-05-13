@@ -8,6 +8,7 @@
     <body>      
         <?php
             require './phpmailer/class.phpmailer.php'; 
+            $reciver = $_POST['mail'];
             $mail = new PHPMailer(); 
             $message = "
             <html>
@@ -18,7 +19,6 @@
                     <p>Hello, $reciver! </p>
                 </body>
             </html>";
-            $reciver = $_POST['mail'];
             $subject = 'lab #13';
             
             $uploaddir = './files/';
@@ -27,9 +27,10 @@
             $file = $uploaddir . $_FILES['file']['name'];
             error_reporting(E_ALL ^ E_DEPRECATED);
             $mail->From = 'Kononov@lex'; 
-            $mail->AddAddress("students@mail.ru", "Students"); 
+            $mail->AddAddress($reciver, "Students"); 
             $mail->Subject = $subject;
             $mail->Body = $message; 
+            $mail->IsHTML(true);
             $mail->AddAttachment($file,$file); 
             if ($mail->Send())
             {
