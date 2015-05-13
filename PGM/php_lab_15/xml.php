@@ -1,0 +1,30 @@
+<?php
+$xmlStr = <<<XML
+<phones>
+    <phone>
+        <firm>Nokia</firm>
+        <model>N65</model>
+        <count>41</count>
+        <prise>567</prise>
+    </phone>
+    <phone>
+        <firm>Samsung</firm>
+        <model>GalaxyNote</model>
+        <count>50</count>
+        <prise>8568</prise>
+    </phone>
+    <phone>
+        <firm>Motorola</firm>
+        <model>V3</model>
+        <count>10</count>
+        <prise>360</prise>
+    </phone>
+    <phone>
+        <firm>Siemens</firm>
+        <model>CX65</model>
+        <count>32</count>
+        <prise>512</prise>
+    </phone>
+</phones>
+XML;
+?>
