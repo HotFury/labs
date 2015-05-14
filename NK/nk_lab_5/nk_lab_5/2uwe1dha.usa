@@ -72,12 +72,12 @@ namespace nk_lab_5
             weight = new double[sensorCount];
             oldWeight = new double[sensorCount];
         }
-        public void InitWeight(List<double> weightsInit)
+        public void InitWeight()
         {
             Random rand = new Random();
             for (int i = 0; i < weight.Length; i++)
             {
-                weight[i] = weightsInit[i];
+                weight[i] = (double) rand.Next(1, 10) / 10;
                 oldWeight[i] = weight[i]; 
             }
         }
@@ -89,21 +89,12 @@ namespace nk_lab_5
         private double alpha;
         private int radius;
         private double coefficient;
-        private int iterations;
-        public int Iteration
-        {
-            get
-            {
-                return iterations;
-            }
-        }
 
         public KohonenNet(int sensorCount, double alphaValue, int radiusValue, double coeff)
         {
             alpha = alphaValue;
             coefficient = coeff;
             radius = radiusValue;
-            iterations = 0;
             sensor = new Sensor[sensorCount];
             axon = new Axon[Constants.axonCount];
             for (int i = 0; i < axon.Length; i++)
@@ -118,13 +109,13 @@ namespace nk_lab_5
                 sensor[i] = new Sensor(vector[i]);
             }
         }
-        public void InitAxons(List<double> weightsInit)
+        public void InitAxons()
         {
             WriteToLogString(" ========== WEIGHTS ========== ");
             WriteToLogHead(axon[0].Weight, "w", 5);
             for(int i = 0; i < axon.Length; i++)
             {
-                axon[i].InitWeight(weightsInit);
+                axon[i].InitWeight();
                 WriteToLog(axon[i].Weight, "A", i);
             }
         }
@@ -197,7 +188,6 @@ namespace nk_lab_5
         }
         public bool Teach(List<List<int>> vectors)
         {
-            iterations++;
             foreach (List<int> curVector in vectors)
             {
                 int axonNum = Recognize(curVector);

@@ -10,7 +10,6 @@ namespace nk_lab_5
         public const int vectorsCount = 9;
         public static int axonCount = 3;
         public static int sensorCount;
-        public static double lim = 0.0005;
 
     }
     partial class Sensor
@@ -31,7 +30,6 @@ namespace nk_lab_5
     partial class Axon
     {
         private double[] weight;
-        private double[] oldWeight;
         public double[] Weight
         {
             get
@@ -43,18 +41,6 @@ namespace nk_lab_5
                 weight = value;
             }
         }
-        public double[] OldWeight
-        {
-            get
-            {
-                return oldWeight;
-            }
-            set
-            {
-                oldWeight = value;
-            }
-        }
-        
         private double distance;
         public double Distance
         {
@@ -70,15 +56,13 @@ namespace nk_lab_5
         public Axon(int sensorCount)
         {
             weight = new double[sensorCount];
-            oldWeight = new double[sensorCount];
         }
-        public void InitWeight(List<double> weightsInit)
+        public void InitWeight()
         {
             Random rand = new Random();
             for (int i = 0; i < weight.Length; i++)
             {
-                weight[i] = weightsInit[i];
-                oldWeight[i] = weight[i]; 
+                weight[i] = (double) rand.Next(1, 10) / 10;
             }
         }
     }
@@ -88,22 +72,10 @@ namespace nk_lab_5
         private Axon[] axon;
         private double alpha;
         private int radius;
-        private double coefficient;
-        private int iterations;
-        public int Iteration
-        {
-            get
-            {
-                return iterations;
-            }
-        }
 
-        public KohonenNet(int sensorCount, double alphaValue, int radiusValue, double coeff)
+        public KohonenNet(int sensorCount, double alphaValue)
         {
             alpha = alphaValue;
-            coefficient = coeff;
-            radius = radiusValue;
-            iterations = 0;
             sensor = new Sensor[sensorCount];
             axon = new Axon[Constants.axonCount];
             for (int i = 0; i < axon.Length; i++)
@@ -118,13 +90,13 @@ namespace nk_lab_5
                 sensor[i] = new Sensor(vector[i]);
             }
         }
-        public void InitAxons(List<double> weightsInit)
+        public void InitAxons()
         {
             WriteToLogString(" ========== WEIGHTS ========== ");
             WriteToLogHead(axon[0].Weight, "w", 5);
             for(int i = 0; i < axon.Length; i++)
             {
-                axon[i].InitWeight(weightsInit);
+                axon[i].InitWeight();
                 WriteToLog(axon[i].Weight, "A", i);
             }
         }
@@ -156,68 +128,12 @@ namespace nk_lab_5
         }
         public void CorrectWeights(int axonNumber)
         {
-            int lowElNum = axonNumber - radius;
-            int highElNum = axonNumber + radius;
-            if (lowElNum < 0)
-                lowElNum = 0;
-            if (highElNum >= axon.Length)
-                highElNum = axon.Length - 1;
-            if (axonNumber == 2)
+            for (int i = 0; i < axon[axonNumber].Weight.Length; i++)
             {
-
+                axon[axonNumber].Weight[i] = axon[axonNumber].Weight[i] + alpha * (sensor[i].Input - axon[axonNumber].Weight[i]);
             }
-            for (int j = lowElNum; j <= highElNum; j++)
-            {
-                for (int i = 0; i < axon[j].Weight.Length; i++)
-                {
-                    axon[j].OldWeight[i] = axon[j].Weight[i];
-                    axon[j].Weight[i] = axon[j].Weight[i] + alpha * (sensor[i].Input - axon[j].Weight[i]);
-                }
-            }
-        }
-        public int Recognize(List<int> vector)
-        {
-            InitSensors(vector);
-            CalculateDistance();
-            return GetWinnerAxon();
-        }
-        public bool Stop()
-        {
-            for (int i = 0; i < axon.Length; i++)
-            {
-                for (int j = 0; j < axon[i].Weight.Length; j++)
-                {
-                    if (Math.Abs(axon[i].Weight[j] - axon[i].OldWeight[j]) > Constants.lim)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        public bool Teach(List<List<int>> vectors)
-        {
-            iterations++;
-            foreach (List<int> curVector in vectors)
-            {
-                int axonNum = Recognize(curVector);
-                CorrectWeights(axonNum);
-                WriteToLogHead(axon[0].Weight, "w", 5);
-                for (int i = 0; i < axon.Length; i++)
-                {
-                    WriteToLog(axon[i].Weight, "A", i);
-                }
-            }
-            alpha = alpha * coefficient;
-            if (radius > 0)
-            {
-                radius--;
-            }
-            if (!Stop())
-            {
-                Teach(vectors);
-            }
-            return true;
+            //WriteToLogHead(axon[axonNumber].Weight, "w", 5);
+            WriteToLog(axon[axonNumber].Weight, "A", axonNumber);
         }
     }
     partial class Log
@@ -502,7 +418,7 @@ namespace nk_lab_5
             // alphaLabel
             // 
             this.alphaLabel.AutoSize = true;
-            this.alphaLabel.Location = new System.Drawing.Point(262, 37);
+            this.alphaLabel.Location = new System.Drawing.Point(13, 64);
             this.alphaLabel.Name = "alphaLabel";
             this.alphaLabel.Size = new System.Drawing.Size(26, 13);
             this.alphaLabel.TabIndex = 7;
@@ -511,7 +427,7 @@ namespace nk_lab_5
             // Rlabel
             // 
             this.Rlabel.AutoSize = true;
-            this.Rlabel.Location = new System.Drawing.Point(262, 63);
+            this.Rlabel.Location = new System.Drawing.Point(13, 90);
             this.Rlabel.Name = "Rlabel";
             this.Rlabel.Size = new System.Drawing.Size(27, 13);
             this.Rlabel.TabIndex = 8;
@@ -519,14 +435,14 @@ namespace nk_lab_5
             // 
             // alphaValue
             // 
-            this.alphaValue.Location = new System.Drawing.Point(283, 34);
+            this.alphaValue.Location = new System.Drawing.Point(34, 61);
             this.alphaValue.Name = "alphaValue";
             this.alphaValue.Size = new System.Drawing.Size(32, 20);
             this.alphaValue.TabIndex = 9;
             // 
             // rValue
             // 
-            this.rValue.Location = new System.Drawing.Point(283, 60);
+            this.rValue.Location = new System.Drawing.Point(34, 87);
             this.rValue.Name = "rValue";
             this.rValue.Size = new System.Drawing.Size(32, 20);
             this.rValue.TabIndex = 10;
@@ -534,7 +450,7 @@ namespace nk_lab_5
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(372, 8);
+            this.label4.Location = new System.Drawing.Point(325, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(64, 13);
             this.label4.TabIndex = 11;
@@ -542,14 +458,14 @@ namespace nk_lab_5
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(375, 25);
+            this.textBox1.Location = new System.Drawing.Point(328, 26);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 12;
             // 
             // teach
             // 
-            this.teach.Location = new System.Drawing.Point(12, 67);
+            this.teach.Location = new System.Drawing.Point(12, 139);
             this.teach.Name = "teach";
             this.teach.Size = new System.Drawing.Size(75, 23);
             this.teach.TabIndex = 13;
@@ -559,17 +475,17 @@ namespace nk_lab_5
             // 
             // recognize
             // 
-            this.recognize.Location = new System.Drawing.Point(375, 51);
+            this.recognize.Location = new System.Drawing.Point(328, 52);
             this.recognize.Name = "recognize";
             this.recognize.Size = new System.Drawing.Size(75, 23);
             this.recognize.TabIndex = 14;
             this.recognize.Text = "Recognize";
             this.recognize.UseVisualStyleBackColor = true;
-            //this.recognize.Click += new System.EventHandler(this.recognize_Click);
+            this.recognize.Click += new System.EventHandler(this.recognize_Click);
             // 
             // about
             // 
-            this.about.Location = new System.Drawing.Point(12, 96);
+            this.about.Location = new System.Drawing.Point(12, 168);
             this.about.Name = "about";
             this.about.Size = new System.Drawing.Size(75, 23);
             this.about.TabIndex = 15;
@@ -579,15 +495,15 @@ namespace nk_lab_5
             // 
             // kValue
             // 
-            this.kValue.Location = new System.Drawing.Point(283, 86);
+            this.kValue.Location = new System.Drawing.Point(34, 113);
             this.kValue.Name = "kValue";
             this.kValue.Size = new System.Drawing.Size(32, 20);
-            this.kValue.TabIndex = 11;
+            this.kValue.TabIndex = 17;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(262, 89);
+            this.label5.Location = new System.Drawing.Point(13, 116);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(25, 13);
             this.label5.TabIndex = 16;
@@ -601,10 +517,10 @@ namespace nk_lab_5
             this.Controls.Add(this.kValue);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.about);
-            //this.Controls.Add(this.recognize);
+            this.Controls.Add(this.recognize);
             this.Controls.Add(this.teach);
-            //this.Controls.Add(this.textBox1);
-            //this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.rValue);
             this.Controls.Add(this.alphaValue);
             this.Controls.Add(this.Rlabel);
