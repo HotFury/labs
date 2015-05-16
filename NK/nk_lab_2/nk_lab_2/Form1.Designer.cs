@@ -388,7 +388,6 @@ namespace nk_lab_2
                     recCount++;
                 }
                 res2 = Responder.Input;
-                //WriteToLogString((res1 + res2).ToString());
                 sum.Add(res1 + res2);
                 if (iter >= 300)
                 {
@@ -441,14 +440,11 @@ namespace nk_lab_2
             decimal weightPasiveStep = (-(activeCount - decrement) * step) / (Associator.Length - decrement);
             for (int i = 0; i < Responder.Weight.Length; i++)
             {
-                //if (Responder.Weight[i] < 1 && Responder.Weight[i] > 0)
-                
                 if (Associator[i].Output == 1)
                 {
                     if (Responder.Weight[i] + weightActiveStep > 1 )
                     {
                         Responder.Weight[i] = 1;
-                        //Responder.Weight[i] += (weightActiveStep - Math.Abs(1 - Responder.Weight[i]));
                     }
                     else if (Responder.Weight[i] + weightActiveStep < 0)
                     {
@@ -464,7 +460,6 @@ namespace nk_lab_2
                     if (Responder.Weight[i] + weightPasiveStep < 0)
                     {
                         Responder.Weight[i] = 0;
-                        //Responder.Weight[i] += (weightPasiveStep - Math.Abs(Responder.Weight[i]));
                     }
                     else if (Responder.Weight[i] + weightPasiveStep > 1)
                     {
@@ -475,7 +470,6 @@ namespace nk_lab_2
                         Responder.Weight[i] += weightPasiveStep;
                     }
                 }
-                
             }
         }
         

@@ -217,13 +217,13 @@ namespace nk_lab_1
                             }
                             else
                             {
-                                succTeach = false;
+                                return false;
                             }
                         }
                     }
                 }
             }
-            return succTeach;
+            return true;
         }
         public void WriteToLog(int[] arr, string arrayName, int curIter)
         {

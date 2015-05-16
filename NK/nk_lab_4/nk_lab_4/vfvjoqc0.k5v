@@ -5,11 +5,11 @@ using System;
 using System.Windows.Forms;
 public static class Constants
 {
-    public const int lettersCount = 6;
-    public const int maxInputCount = 60;
+    public const int lettersCount = 3;
+    public const int maxInputCount = 30;
     
 }
-namespace nk_lab_3
+namespace nk_lab_4
 {
     partial class Log
     {
@@ -63,7 +63,28 @@ namespace nk_lab_3
             //write_text.WriteLine("==========");
             write_text.Close(); // Закрываем файл
         }
-        public void WriteToLog(Z_neuron[] values, string row, int num)
+        public void WriteToLog(int[] arr, string row, int num)
+        {
+            StreamWriter write_text;  //Класс для записи в файл
+            FileInfo file = new FileInfo("log.txt");
+            write_text = file.AppendText(); //Дописываем инфу в файл, если файла не существует он создастся
+            /*string inString = ArrayToString(arr, "|");
+            string[] values = inString.Split('|');*/
+            string outString = String.Format("{0,5:0.###}", row + num.ToString()) + "|";
+            string bound = "-----|";
+            string bounder = "=====|";
+            foreach (decimal val in arr)
+            {
+                bounder += bound;
+                outString += String.Format("{0,5:0.###}", val) + "|";
+            }
+
+            write_text.WriteLine(outString); //Записываем в файл текст из текстового поля
+            write_text.WriteLine(bounder);
+            //write_text.WriteLine("==========");
+            write_text.Close(); // Закрываем файл
+        }
+        public void WriteToLog(A_neuron[] values, string row, int num, string whatOut)
         {
             StreamWriter write_text;  //Класс для записи в файл
             FileInfo file = new FileInfo("log.txt");
@@ -77,10 +98,37 @@ namespace nk_lab_3
                 outString = String.Format("{0,5:0.000}", row) + "|";
             string bound = "-----|";
             string bounder = "=====|";
-            foreach (Z_neuron val in values)
+            if (whatOut == "threshold")
             {
-                bounder += bound;
-                outString += String.Format("{0,5:0.000}", val.Output) + "|";
+                foreach (A_neuron val in values)
+                {
+                    bounder += bound;
+                    outString += String.Format("{0,5:0.0}", val.Threshold) + "|";
+                }
+            }
+            else if (whatOut == "outputDec")
+            {
+                foreach (A_neuron val in values)
+                {
+                    bounder += bound;
+                    outString += String.Format("{0,5:0.0}", val.OutputDec) + "|";
+                }
+            }
+            else if (whatOut == "output")
+            {
+                foreach (A_neuron val in values)
+                {
+                    bounder += bound;
+                    outString += String.Format("{0,5:0.0}", val.Output) + "|";
+                }
+            }
+            else if (whatOut == "input")
+            {
+                foreach (A_neuron val in values)
+                {
+                    bounder += bound;
+                    outString += String.Format("{0,5:0.0}", val.Input) + "|";
+                }
             }
 
             write_text.WriteLine(outString); //Записываем в файл текст из текстового поля
@@ -118,30 +166,27 @@ namespace nk_lab_3
             }
         }
     }
-    partial class Sensor
+    partial class A_neuron : Log
     {
+        private decimal[] weight;
         private int input;
-        public int Input
+        private decimal threshold;
+        public decimal Threshold
         {
             get
             {
-                return input;
-            }
-            set
-            {
-                input = value;
+                return threshold;
             }
         }
-        public Sensor(int inputValue)
+        private decimal outputDec;
+        private int output;
+        public int Output
         {
-            input = inputValue;
+            get
+            {
+                return output;
+            }
         }
-    }
-    partial class Neuron
-    {
-        private decimal[] weight;
-        private decimal input;
-        private decimal output;
         public decimal[] Weight
         {
             get
@@ -153,7 +198,7 @@ namespace nk_lab_3
                 weight = value;
             }
         }
-        public decimal Input
+        public int Input
         {
             get
             {
@@ -164,301 +209,233 @@ namespace nk_lab_3
                 input = value;
             }
         }
-        public decimal Output
+        public decimal OutputDec
         {
             get
             {
-                return output;
+                return outputDec;
             }
             protected set
             {
-                output = value;
+                outputDec = value;
             }
         }
-        public Neuron(int count)
+        public A_neuron(int inputSize)
         {
-            weight = new decimal[count];
+            weight = new decimal[inputSize];
+            threshold = 0;
         }
-
-    }
-    partial class Z_neuron : Neuron
-    {
-
-        private decimal offset;
-        private decimal k_const;
-        private decimal U_const;
-        public Z_neuron(int count, decimal k) : base(count)
+        public void InitWeight(List<int[]> letters, int neuronNum)
         {
-            offset = (decimal) count / 2;
-            k_const = k;
-            U_const = 1m / k;
-            //MessageBox.Show("k = " + k_const + " U = " + U_const);
-        }
-        public void InitWeight(Sensor[] sens)
-        {
-            for (int i = 0; i < sens.Length; i++)
-            {
-                Weight[i] = (decimal)sens[i].Input / 2;
-            }
-        }
-        public decimal InitInput(Sensor[] sensor)
-        {
-            Input = offset;
-            for (int i = 0; i < sensor.Length; i++)
-            {
-                Input += Weight[i] * sensor[i].Input;
-            }
-            return Input;
-        }
-        public decimal CalculateOut()
-        {
-            Output = 0;
-            if (Input <= 0)
-            {
-                Output = 0;
-            }
-            else if (Input > 0 && Input <= U_const)
-            {
-                Output = k_const * Input;
-            }
-            else if (Input > U_const)
-            {
-                Output = U_const;
-            }
-            return Output;
-        }
-    }
-    partial class A_neuron : Neuron
-    {
-        private decimal epsilon;
-        public decimal Epsilon
-        {
-            get
-            {
-                return epsilon;
-            }
-        }
-        private decimal[] input;
-        public A_neuron(int count) : base(count)
-        {
-            epsilon = 1m / count;
-            input = new decimal[count];
-        }
-        public void InitInput(Z_neuron[] Z)
-        {
-            for (int i = 0; i < Z.Length; i++)
-            {
-                input[i] = Z[i].Output;
-            }
-        }
-        public void InitInput(A_neuron[] A)
-        {
-            for (int i = 0; i < A.Length; i++)
-            {
-                input[i] = A[i].Output;
-            }
-        }
-        public void InitWeight(int neuronNum)
-        {
-            for (int i = 0; i < Weight.Length; i++)
+            for (int i = 0; i < weight.Length; i++)
             {
                 if (i == neuronNum)
                 {
-                    Weight[i] = 1;
+                    weight[i] = 0;
                 }
                 else
                 {
-                    Weight[i] = -epsilon;
+                    for (int j = 0; j < letters.Count; j++)
+                        weight[i] += letters[j][i] * letters[j][neuronNum];
                 }
             }
         }
-        public decimal CalculateOutput() 
+        public void InitThreshold()
         {
-            Output = 0;
-            for (int i = 0; i < Weight.Length; i++)
+            threshold = 0;
+            for (int i = 0; i < weight.Length; i++)
             {
-                Output += input[i] * Weight[i];
+                threshold += weight[i];
             }
-            if (Output < 0)
-            {
-                Output = 0;
-            }
-            return Output;
+            threshold /= Constants.lettersCount;
         }
+        public void InitNeuron(int letterComponent)
+        {
+            input = letterComponent;
+            output = 0;
+        }
+        public void CalculateOut(int[] inputVector)
+        {
+            
+            outputDec = 0;
+            for (int i = 0; i < weight.Length; i++)
+            {
+                outputDec += inputVector[i] * weight[i];
+            }
+            //outputDec -= threshold;
 
-    }
-    partial class MaxNet : Log
-    {
-        private A_neuron[] a_neuron;
-        private int iter;
-        private decimal[] output;
-        public decimal[] Output
-        {
-            get
-            {
-                return output;
-            }
-        }
-        public MaxNet(Z_neuron[] Z)
-        {
-            iter = 0;
-            output = new decimal[Z.Length];
-            a_neuron = new A_neuron[Z.Length];
-            for (int i = 0; i < a_neuron.Length; i++)
-            {
-                a_neuron[i] = new A_neuron(Z.Length);
-                a_neuron[i].InitInput(Z);
-                a_neuron[i].InitWeight(i);
-            }
-        }
-        public void CalculateOut()
-        {
-            iter++;
-            for (int i = 0; i < a_neuron.Length; i++)
-            {
-                output[i] = a_neuron[i].CalculateOutput();
-            }
-            for (int i = 0; i < a_neuron.Length; i++)
-            {
-                a_neuron[i].InitInput(a_neuron);
-            }
-            WriteToLog(output, "t", iter);
-            int uniq = 0;
-            for (int i = 0; i < output.Length; i++)
-            {
-                if (output[i] != 0)
-                {
-                    uniq += 1;
-                }
-            }
-            if (uniq != 1)
-            {
-                CalculateOut();
-            }
-        }
-        public decimal GetEpsilon()
-        {
-            return a_neuron[0].Epsilon;
-        }
-    }
-    partial class Y_neuron
-    {
-        private int output;
-        private decimal input;
-        public Y_neuron(decimal inp)
-        {
-            InitInput(inp);
-        }
-        public void InitInput(decimal inp)
-        {
-            input = inp;
-        }
-        public int CalculateOut()
-        {
-            if (input > 0)
+
+            if (outputDec > threshold)
             {
                 output = 1;
             }
-            else
+            else if (outputDec == threshold)
             {
-                output = 0;
+                output = input;
             }
-            return output;
+            else if (outputDec < threshold)
+            {
+                output = -1;
+            }
+            /*if (output != input)
+                input = output;*/
+             
         }
+        
     }
-    partial class HebbNet : Log
+    partial class HopfieldNet : Log
     {
-        private Sensor[] sensor;
-        private Z_neuron[] z_neuron;
-        private MaxNet maxNet;
-        private Y_neuron[] y_neuron;
-        private int[] output;
-        public HebbNet(int lettersCount, int lettersSize, decimal k)
+        private A_neuron[] a_neuron;
+        private int[] input;
+        private string mode;
+        public string Mode
         {
-            sensor = new Sensor[lettersSize];
-            z_neuron = new Z_neuron[lettersCount];
-            for (int i = 0; i < z_neuron.Length; i++ )
+            get
             {
-                z_neuron[i] = new Z_neuron(lettersSize, k);
+                return mode;
             }
-            y_neuron = new Y_neuron[lettersCount];
-            output = new int[lettersCount];
         }
-        public void InitInput(int[] letter)
+        public int[] Input
         {
-            for (int i = 0; i < sensor.Length; i++)
+            get
             {
-                sensor[i] = new Sensor(letter[i]);
+                return input;
             }
-            for (int i = 0; i < z_neuron.Length; i++)
+        }
+        private List<List<int>> iterations = new List<List<int>>();
+        public List<List<int>> Iterations 
+        {
+            get
             {
-                z_neuron[i].InitInput(sensor);
+                return iterations;
             }
+
+        }
+        public HopfieldNet(int inputSize, int lettersCount)
+        {
+            a_neuron = new A_neuron[inputSize];
+            for (int i = 0; i < a_neuron.Length; i++)
+                a_neuron[i] = new A_neuron(inputSize);
+            input = new int[inputSize];
+
         }
         public void InitNet(List<int[]> letters)
         {
-            WriteToLogHead(z_neuron[0].Weight, "S", 5);
-            for (int i = 0; i < letters.Count; i++)
+            WriteToLogHead(a_neuron[0].Weight, "A", 5);
+            for (int i = 0; i < a_neuron.Length; i++)
             {
-                InitInput(letters[i]);
-                z_neuron[i].InitWeight(sensor);
-                WriteToLog(z_neuron[i].Weight, "Z", i);
+                a_neuron[i].InitWeight(letters, i);
+                WriteToLog(a_neuron[i].Weight, "A", i);
             }
-        }
+            for (int i = 0; i < a_neuron.Length; i++)
+            {
+                a_neuron[i].InitThreshold();
 
-        public int Recognize(int[] letter)
+            }
+            WriteToLog(a_neuron, "trhld", -1,"threshold");
+        }
+        public void InitNeurons(int[] letter)
         {
-            int res = -1;
-            List<decimal> temp = new List<decimal>();
-            InitInput(letter);
-            for (int i = 0; i < z_neuron.Length; i++)
+            List<int> neuronActiveNums = new List<int>();
+            for (int i = 0; i < letter.Length; i++)
             {
-                z_neuron[i].CalculateOut();
+                a_neuron[i].InitNeuron(letter[i]);
+                a_neuron[i].CalculateOut(letter);
+                neuronActiveNums.Add(i);
+                input[i] = letter[i];
             }
-            WriteToLogString("=========MaxNet input values=========");
-            WriteToLog(z_neuron, "Zout", -1);
-            maxNet = new MaxNet(z_neuron);
-            
-            for (int i = 0; i < z_neuron.Length; i++ )
-            {
-                temp.Add(z_neuron[i].Output);
-            }
-            temp.Sort();
-            if (temp[temp.Count - 1] != temp[temp.Count - 2])
-            {
-                WriteToLogString("==============MaxNet Working==============");
-                WriteToLogHead(maxNet.Output, "A", 5);
-                maxNet.CalculateOut();
-                for (int i = 0; i < y_neuron.Length; i++)
-                {
-                    y_neuron[i] = new Y_neuron(maxNet.Output[i]);
-                    output[i] = y_neuron[i].CalculateOut();
-                }
-                for (int i = 0; i < output.Length; i++)
-                {
-                    if (output[i] == 1)
-                    {
-                        res = i;
-                    }
-                }
-            }
-            else
-            {
-                WriteToLogString("==============MaxNet not worked, because there are 2 or more maximum equal input==============");
-            }
-            return res;
+            iterations.Add(neuronActiveNums);
         }
-        public decimal GetEpsilon()
+        public void InitMode(string modeVal)
         {
-            return maxNet.GetEpsilon();
+            mode = modeVal;
         }
-        
-        
+        public void ReserIterations()
+        {
+            iterations = new List<List<int>>();
+        }
+        private void RandWork()
+        {
+            //iterations = new List<List<int>>();
+            List<int> activeNum = new List<int>();
+            int num = new Random().Next(0, a_neuron.Length);
+            a_neuron[num].InitNeuron(a_neuron[num].Output);
+            a_neuron[num].CalculateOut(input);
+            activeNum.Add(num);
+            iterations.Add(activeNum);
+            input[num] = a_neuron[num].Input;
+        }
+        private void AllWork()
+        {
+            //iterations = new List<List<int>>();
+            List<int> activeNum = new List<int>();
+            for (int num = 0; num < a_neuron.Length; num++)
+            {
+                a_neuron[num].InitNeuron(a_neuron[num].Output);
+                a_neuron[num].CalculateOut(input);
+                activeNum.Add(num);
+                input[num] = a_neuron[num].Input;
+            }
+            iterations.Add(activeNum);
+        }
+        private void QuantWork()
+        {
+            //iterations = new List<List<int>>();
+            List<int> activeNum = new List<int>();
+            List<int> nums = new List<int>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] != a_neuron[i].Output)
+                {
+                    nums.Add(i);
+                }
+            }
+            foreach (int num in nums)
+            {
+                a_neuron[num].InitNeuron(a_neuron[num].Output);
+                a_neuron[num].CalculateOut(input);
+                activeNum.Add(num);
+                input[num] = a_neuron[num].Input;
+            }
+            iterations.Add(activeNum);
 
-
-        
+        }
+        public void Recognize()
+        {
+            //WriteToLog(a_neuron, "outD", -1, "outputDec");
+            WriteToLog(input, "inp", -1);
+            WriteToLog(a_neuron, "out", -1, "output");
+            if (!InputOutputEqual())
+            {
+                switch (mode)
+                {
+                    case "allWork":
+                        AllWork();
+                        break;
+                    case "randWork":
+                        RandWork();
+                        break;
+                    case "quantWork":
+                        QuantWork();
+                        break;
+                    
+                }
+                Recognize();
+            }
+        }
+        public bool InputOutputEqual()
+        {
+            for (int i = 0; i < a_neuron.Length; i++)
+            {
+                if (a_neuron[i].Input != a_neuron[i].Output)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
-    partial class Form1
+        partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -484,6 +461,37 @@ namespace nk_lab_3
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+        public void MakeVisual(int num)
+        {
+            //ResetVisual();
+            //System.Threading.Thread.Sleep(100);
+            neuronVisual[num].BackColor = System.Drawing.Color.GreenYellow;
+            for (int i = 0; i < hopfieldNet.Input.Length; i++)
+            {
+                if (hopfieldNet.Input[i] == 1)
+                {
+                    standartRecognized[i].CheckState = Windows.Forms.CheckState.Indeterminate;
+                }
+            }
+            //System.Threading.Thread.Sleep(500);
+        }
+        public void ResetVisual()
+        {
+            for (int i = 0; i < neuronVisual.Length; i++)
+            {
+                neuronVisual[i].BackColor = System.Drawing.Color.Cyan;
+            }
+        }
+        public void DrawLetter()
+        {
+            for (int i = 0; i < hopfieldNet.Input.Length; i++)
+            {
+                if (hopfieldNet.Input[i] == 1)
+                {
+                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                }
+            }
+        }
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
@@ -493,22 +501,27 @@ namespace nk_lab_3
             this.height = new System.Windows.Forms.Label();
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
-            /*this.stepValue = new System.Windows.Forms.TextBox();*/
+            /*this.stepValue = new System.Windows.Forms.TextBox();
             this.epsilonLabel = new System.Windows.Forms.Label();
             this.epsilonValue = new System.Windows.Forms.Label();
             this.coeficient = new System.Windows.Forms.Label();
-            this.coeficientValue = new System.Windows.Forms.TextBox();
+            this.coeficientValue = new System.Windows.Forms.TextBox();*/
             this.showCheck = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.showCheck = new System.Windows.Forms.Button();
+            this.neuronVisual = new System.Windows.Forms.Label[Constants.maxInputCount];
+            this.allWork = new System.Windows.Forms.RadioButton();
+            this.randWork = new System.Windows.Forms.RadioButton();
+            this.quantWork = new System.Windows.Forms.RadioButton();
             for (int i = 0; i < Constants.lettersCount; i++)
             {
                 System.Windows.Forms.CheckBox[] letter = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
                 for (int j = 0; j < Constants.maxInputCount; j++)
                 {
                     letter[j] = new System.Windows.Forms.CheckBox();
+                    neuronVisual[j] = new System.Windows.Forms.Label();
                 }
                 this.letters.Add(letter);
             }
@@ -516,6 +529,12 @@ namespace nk_lab_3
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 this.standart[i] = new System.Windows.Forms.CheckBox();
+            }
+
+            this.standartRecognized = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
+            for (int i = 0; i < Constants.maxInputCount; i++)
+            {
+                this.standartRecognized[i] = new System.Windows.Forms.CheckBox();
             }
 
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -563,39 +582,41 @@ namespace nk_lab_3
             // 
             // associatorCountValue
             //
-
+            /*
             this.coeficientValue.Location = new System.Drawing.Point(207, 53);
             this.coeficientValue.Name = "associatorCountValue";
             this.coeficientValue.Size = new System.Drawing.Size(32, 20);
-            this.coeficientValue.TabIndex = 4;
+            this.coeficientValue.TabIndex = 4;*/
             // 
             // associatorCountLabel
             // 
+            /*
             this.coeficient.AutoSize = true;
             this.coeficient.Location = new System.Drawing.Point(106, 56);
             this.coeficient.Name = "associatorCountLabel";
             this.coeficient.Size = new System.Drawing.Size(36, 13);
             this.coeficient.TabIndex = 3;
-            this.coeficient.Text = "Coeficient value(k):";
+            this.coeficient.Text = "Coeficient value(k):";*/
             // 
             // epsilonLabel
             // 
-            
+            /*
             this.epsilonLabel.AutoSize = true;
             this.epsilonLabel.Location = new System.Drawing.Point(265, 56);
             this.epsilonLabel.Name = "stepLabel";
             this.epsilonLabel.Size = new System.Drawing.Size(32, 13);
             this.epsilonLabel.TabIndex = 5;
-            this.epsilonLabel.Text = "ε = ";
+            this.epsilonLabel.Text = "ε = ";*/
             // 
             // epsilonValue
             // 
+            /*
             this.epsilonValue.AutoSize = true;
             this.epsilonValue.Location = new System.Drawing.Point(290, 56);
             this.epsilonValue.Name = "stepLabel";
             this.epsilonValue.Size = new System.Drawing.Size(32, 13);
             this.epsilonValue.TabIndex = 5;
-            this.epsilonValue.Text = "N/A";
+            this.epsilonValue.Text = "N/A";*/
 
             
             // 
@@ -615,7 +636,7 @@ namespace nk_lab_3
             this.teach.Name = "tech";
             this.teach.Size = new System.Drawing.Size(75, 23);
             this.teach.TabIndex = 8;
-            this.teach.Text = "Initialise net";
+            this.teach.Text = "Teach";
             this.teach.UseVisualStyleBackColor = true;
             this.teach.Click += new System.EventHandler(this.teach_Click);
             //
@@ -656,43 +677,70 @@ namespace nk_lab_3
                 this.standart[i].Size = new System.Drawing.Size(80, 17);
                 this.standart[i].ThreeState = true;
                 this.standart[i].UseVisualStyleBackColor = true;
+
+
+                this.standartRecognized[i].AutoSize = true;
+                this.standartRecognized[i].Location = new System.Drawing.Point(13, 6);
+                this.standartRecognized[i].Size = new System.Drawing.Size(80, 17);
+                this.standartRecognized[i].ThreeState = true;
+                this.standartRecognized[i].UseVisualStyleBackColor = true;
+            }
+            // 
+            // neuronVisual
+            // 
+            for (int i = 0; i < neuronVisual.Length; i++)
+            {
+                
+                this.neuronVisual[i].AutoSize = true;
+                this.neuronVisual[i].BackColor = System.Drawing.Color.Cyan;
+                this.neuronVisual[i].Location = new System.Drawing.Point(0, 0);
+                this.neuronVisual[i].Name = "neuronVisual" + i.ToString();
+                this.neuronVisual[i].Size = new System.Drawing.Size(35, 13);
+                this.neuronVisual[i].TabIndex = 0;
+                if (i < 10)
+                    this.neuronVisual[i].Text = " A" + i + " ";
+                else
+                    this.neuronVisual[i].Text = "A" + i;
+
             }
 
+            // 
+            // allWork
+            // 
+            this.allWork.AutoSize = true;
+            this.allWork.Location = new System.Drawing.Point(130, 30);
+            this.allWork.Name = "allWork";
+            this.allWork.Size = new System.Drawing.Size(31, 17);
+            this.allWork.TabIndex = 0;
+            this.allWork.TabStop = true;
+            this.allWork.Text = "all neurons work";
+            this.allWork.UseVisualStyleBackColor = true;
+
+            // 
+            // randWork
+            // 
+            this.randWork.AutoSize = true;
+            this.randWork.Location = new System.Drawing.Point(130, 45);
+            this.randWork.Name = "randWork";
+            this.randWork.Size = new System.Drawing.Size(31, 17);
+            this.randWork.TabIndex = 0;
+            this.randWork.TabStop = true;
+            this.randWork.Text = "random neuron work";
+            this.randWork.UseVisualStyleBackColor = true;
+
+            // 
+            // quantWork
+            // 
+            this.quantWork.AutoSize = true;
+            this.quantWork.Location = new System.Drawing.Point(130, 60);
+            this.quantWork.Name = "quantWork";
+            this.quantWork.Size = new System.Drawing.Size(31, 17);
+            this.quantWork.TabIndex = 0;
+            this.quantWork.TabStop = true;
+            this.quantWork.Text = "quantity of neurons work";
+            this.quantWork.UseVisualStyleBackColor = true;
 
 
-            // 
-            // alphaSystem
-            // 
-            /*
-            this.alphaSystem.AutoSize = true;
-            this.alphaSystem.Location = new System.Drawing.Point(216, 26);
-            this.alphaSystem.Name = "alpha";
-            this.alphaSystem.Size = new System.Drawing.Size(31, 17);
-            this.alphaSystem.TabIndex = 0;
-            this.alphaSystem.TabStop = true;
-            this.alphaSystem.Text = "α";
-            this.alphaSystem.UseVisualStyleBackColor = true;
-            // 
-            // gammaSystem
-            // 
-            this.gammaSystem.AutoSize = true;
-            this.gammaSystem.Location = new System.Drawing.Point(253, 26);
-            this.gammaSystem.Name = "gamma";
-            this.gammaSystem.Size = new System.Drawing.Size(31, 17);
-            this.gammaSystem.TabIndex = 1;
-            this.gammaSystem.TabStop = true;
-            this.gammaSystem.Text = "γ";
-            this.gammaSystem.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(100, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Reinforcement system:";
-            */
             
 
 
@@ -730,11 +778,14 @@ namespace nk_lab_3
             this.Controls.Add(this.widthValue);
             this.Controls.Add(this.height);
             this.Controls.Add(this.heightValue);
-            this.Controls.Add(this.epsilonLabel);
-            this.Controls.Add(this.epsilonValue);
+            this.Controls.Add(this.allWork);
+            this.Controls.Add(this.randWork);
+            this.Controls.Add(this.quantWork);
+            //this.Controls.Add(this.epsilonLabel);
+            //this.Controls.Add(this.epsilonValue);
             /*this.Controls.Add(this.stepValue);*/
-            this.Controls.Add(this.coeficient);
-            this.Controls.Add(this.coeficientValue);
+            //this.Controls.Add(this.coeficient);
+            //this.Controls.Add(this.coeficientValue);
 
 
             //this.Controls.Add(this.label2);
@@ -751,11 +802,13 @@ namespace nk_lab_3
                     this.Controls.Add(letters[j][i]);
                 }
                 this.Controls.Add(this.standart[i]);
+                this.Controls.Add(this.standartRecognized[i]);
+                this.Controls.Add(this.neuronVisual[i]);
             }
 
 
             this.Name = "Form1";
-            this.Text = "Hemming net";
+            this.Text = "Hopfield network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -771,6 +824,7 @@ namespace nk_lab_3
                 {
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
                     standart[i].Location = new System.Drawing.Point(5, 5);
+                    standartRecognized[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
             //this.showCheck.Location = new System.Drawing.Point(0, 0);
@@ -782,9 +836,14 @@ namespace nk_lab_3
             int xConst = 110;
             int x = xConst;
             int step = 15;
+            int xx = 20;
+            int yy = 250;
             int offset = letterWidth * step + step;
             for (int i = 0; i < count; i++)
             {
+
+                this.neuronVisual[i].Location = new System.Drawing.Point(xx + 30 * i, yy);
+
                 if (i + 1 > width)
                 {
                     x = xConst;
@@ -798,6 +857,7 @@ namespace nk_lab_3
                     letters[j][i].Location = new System.Drawing.Point(x + j * offset, y);
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
+                this.standartRecognized[i].Location = new System.Drawing.Point(x + letters.Count * 2 * offset + step, y);
             }
         }
         #endregion
@@ -806,19 +866,24 @@ namespace nk_lab_3
 
         protected System.Windows.Forms.Label height;
         protected System.Windows.Forms.Label width;
-        protected System.Windows.Forms.Label epsilonLabel;
-        protected System.Windows.Forms.Label epsilonValue;
-        protected System.Windows.Forms.Label coeficient;
+        //protected System.Windows.Forms.Label epsilonLabel;
+        //protected System.Windows.Forms.Label epsilonValue;
+        //protected System.Windows.Forms.Label coeficient;
         protected System.Windows.Forms.TextBox heightValue;
         protected System.Windows.Forms.TextBox widthValue;
         //protected System.Windows.Forms.TextBox stepValue;
-        protected System.Windows.Forms.TextBox coeficientValue;
+        //protected System.Windows.Forms.TextBox coeficientValue;
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
+        protected System.Windows.Forms.CheckBox[] standartRecognized;
         protected System.Windows.Forms.Button showCheck;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
+        private System.Windows.Forms.Label[] neuronVisual;
+        protected System.Windows.Forms.RadioButton allWork;
+        protected System.Windows.Forms.RadioButton randWork;
+        protected System.Windows.Forms.RadioButton quantWork;
 
         //protected System.Windows.Forms.RadioButton alphaSystem;
         //protected System.Windows.Forms.RadioButton gammaSystem;

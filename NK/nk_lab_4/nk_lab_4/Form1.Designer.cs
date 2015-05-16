@@ -5,7 +5,7 @@ using System;
 using System.Windows.Forms;
 public static class Constants
 {
-    public const int lettersCount = 2;
+    public const int lettersCount = 3;
     public const int maxInputCount = 30;
     
 }
@@ -243,24 +243,24 @@ namespace nk_lab_4
         public void InitThreshold()
         {
             threshold = 0;
-            /*for (int i = 0; i < weight.Length; i++)
+            for (int i = 0; i < weight.Length; i++)
             {
                 threshold += weight[i];
             }
-            threshold /= Constants.lettersCount;*/
+            threshold /= Constants.lettersCount;
         }
         public void InitNeuron(int letterComponent)
         {
             input = letterComponent;
             output = 0;
         }
-        public void CalculateOut()
+        public void CalculateOut(int[] inputVector)
         {
             
             outputDec = 0;
             for (int i = 0; i < weight.Length; i++)
             {
-                outputDec += input * weight[i];
+                outputDec += inputVector[i] * weight[i];
             }
             //outputDec -= threshold;
 
@@ -287,12 +287,36 @@ namespace nk_lab_4
     {
         private A_neuron[] a_neuron;
         private int[] input;
+        private string mode;
+        public string Mode
+        {
+            get
+            {
+                return mode;
+            }
+        }
+        public int[] Input
+        {
+            get
+            {
+                return input;
+            }
+        }
         private List<List<int>> iterations = new List<List<int>>();
+        private List<List<int>> lettersHistory = new List<List<int>>();
         public List<List<int>> Iterations 
         {
             get
             {
                 return iterations;
+            }
+
+        }
+        public List<List<int>> LettersHistory
+        {
+            get
+            {
+                return lettersHistory;
             }
 
         }
@@ -322,42 +346,95 @@ namespace nk_lab_4
         public void InitNeurons(int[] letter)
         {
             List<int> neuronActiveNums = new List<int>();
+            List<int> recLetter = new List<int>();
             for (int i = 0; i < letter.Length; i++)
             {
                 a_neuron[i].InitNeuron(letter[i]);
-                a_neuron[i].CalculateOut();
+                a_neuron[i].CalculateOut(letter);
                 neuronActiveNums.Add(i);
+                input[i] = letter[i];
+                recLetter.Add(input[i]);
             }
             iterations.Add(neuronActiveNums);
+            lettersHistory.Add(recLetter);
+        }
+        public void InitMode(string modeVal)
+        {
+            mode = modeVal;
+        }
+        public void ReserIterations_LettersHistory()
+        {
+            iterations = new List<List<int>>();
+            lettersHistory = new List<List<int>>();
+        }
+        private void RandWork()
+        {
+            List<int> activeNum = new List<int>();
+            int num = new Random().Next(0, a_neuron.Length);
+            a_neuron[num].InitNeuron(a_neuron[num].Output);
+            a_neuron[num].CalculateOut(input);
+            activeNum.Add(num);
+            iterations.Add(activeNum);
+            input[num] = a_neuron[num].Input;
+        }
+        private void AllWork()
+        {
+            List<int> activeNum = new List<int>();
+            for (int num = 0; num < a_neuron.Length; num++)
+            {
+                a_neuron[num].InitNeuron(a_neuron[num].Output);
+                a_neuron[num].CalculateOut(input);
+                activeNum.Add(num);
+                input[num] = a_neuron[num].Input;
+            }
+            iterations.Add(activeNum);
+        }
+        private void QuantWork()
+        {
+            List<int> activeNum = new List<int>();
+            List<int> nums = new List<int>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] != a_neuron[i].Output)
+                {
+                    nums.Add(i);
+                }
+            }
+            foreach (int num in nums)
+            {
+                a_neuron[num].InitNeuron(a_neuron[num].Output);
+                a_neuron[num].CalculateOut(input);
+                activeNum.Add(num);
+                input[num] = a_neuron[num].Input;
+            }
+            iterations.Add(activeNum);
         }
         public void Recognize()
         {
-            WriteToLog(a_neuron, "outD", -1, "outputDec");
+            WriteToLog(input, "inp", -1);
             WriteToLog(a_neuron, "out", -1, "output");
-            WriteToLog(a_neuron, "inp", -1, "input");
             if (!InputOutputEqual())
             {
-                int num = new Random().Next(0, a_neuron.Length);
-                a_neuron[num].InitNeuron(a_neuron[num].Output);
-                a_neuron[num].CalculateOut();
-                List<int> activeNum = new List<int>();
-                activeNum.Add(num);
-                iterations.Add(activeNum);
+                switch (mode)
+                {
+                    case "allWork":
+                        AllWork();
+                        break;
+                    case "randWork":
+                        RandWork();
+                        break;
+                    case "quantWork":
+                        QuantWork();
+                        break;
+                }
+                List<int> recLet = new List<int>();
+                for (int i = 0; i < input.Length; i++)
+                {
+                    recLet.Add(input[i]);
+                }
+                lettersHistory.Add(recLet);
                 Recognize();
             }
-
-            //List<int> activeNums = new List<int>();
-            //activeNums = InputOutputEqual();
-            //if (activeNums.Count != 0)
-            /*{
-                //foreach (int cur in activeNums)
-                //for (int i = 0; i < a_neuron.Length; i++)
-                {
-                    
-                }
-                Recognize();
-            }*/
-
         }
         public bool InputOutputEqual()
         {
@@ -370,6 +447,7 @@ namespace nk_lab_4
             }
             return true;
         }
+        
     }
         partial class Form1
     {
@@ -399,16 +477,41 @@ namespace nk_lab_4
         /// </summary>
         public void MakeVisual(int num)
         {
-            //ResetVisual();
-            //System.Threading.Thread.Sleep(100);
             neuronVisual[num].BackColor = System.Drawing.Color.GreenYellow;
-            //System.Threading.Thread.Sleep(500);
+           /* for (int i = 0; i < hopfieldNet.Input.Length; i++)
+            {
+                if (hopfieldNet.Input[i] == 1)
+                {
+                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                }
+                else
+                {
+                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                }
+            }*/
         }
         public void ResetVisual()
         {
             for (int i = 0; i < neuronVisual.Length; i++)
             {
                 neuronVisual[i].BackColor = System.Drawing.Color.Cyan;
+            }
+        }
+        public void DrawLettersHistory(List<List<int>> letters)
+        {
+            foreach(List<int> let in letters)
+            {
+                for (int i = 0; i < let.Count; i++)
+                {
+                    if (let[i] == 1)
+                    {
+                        standartRecognized[i].CheckState = CheckState.Indeterminate;
+                    }
+                    else
+                    {
+                        standartRecognized[i].CheckState = CheckState.Unchecked;
+                    }
+                }
             }
         }
         private void InitializeComponent()
@@ -420,17 +523,20 @@ namespace nk_lab_4
             this.height = new System.Windows.Forms.Label();
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
-            /*this.stepValue = new System.Windows.Forms.TextBox();*/
+            /*this.stepValue = new System.Windows.Forms.TextBox();
             this.epsilonLabel = new System.Windows.Forms.Label();
             this.epsilonValue = new System.Windows.Forms.Label();
             this.coeficient = new System.Windows.Forms.Label();
-            this.coeficientValue = new System.Windows.Forms.TextBox();
+            this.coeficientValue = new System.Windows.Forms.TextBox();*/
             this.showCheck = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.showCheck = new System.Windows.Forms.Button();
             this.neuronVisual = new System.Windows.Forms.Label[Constants.maxInputCount];
+            this.allWork = new System.Windows.Forms.RadioButton();
+            this.randWork = new System.Windows.Forms.RadioButton();
+            this.quantWork = new System.Windows.Forms.RadioButton();
             for (int i = 0; i < Constants.lettersCount; i++)
             {
                 System.Windows.Forms.CheckBox[] letter = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
@@ -445,6 +551,12 @@ namespace nk_lab_4
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 this.standart[i] = new System.Windows.Forms.CheckBox();
+            }
+
+            this.standartRecognized = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
+            for (int i = 0; i < Constants.maxInputCount; i++)
+            {
+                this.standartRecognized[i] = new System.Windows.Forms.CheckBox();
             }
 
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -492,39 +604,41 @@ namespace nk_lab_4
             // 
             // associatorCountValue
             //
-
+            /*
             this.coeficientValue.Location = new System.Drawing.Point(207, 53);
             this.coeficientValue.Name = "associatorCountValue";
             this.coeficientValue.Size = new System.Drawing.Size(32, 20);
-            this.coeficientValue.TabIndex = 4;
+            this.coeficientValue.TabIndex = 4;*/
             // 
             // associatorCountLabel
             // 
+            /*
             this.coeficient.AutoSize = true;
             this.coeficient.Location = new System.Drawing.Point(106, 56);
             this.coeficient.Name = "associatorCountLabel";
             this.coeficient.Size = new System.Drawing.Size(36, 13);
             this.coeficient.TabIndex = 3;
-            this.coeficient.Text = "Coeficient value(k):";
+            this.coeficient.Text = "Coeficient value(k):";*/
             // 
             // epsilonLabel
             // 
-            
+            /*
             this.epsilonLabel.AutoSize = true;
             this.epsilonLabel.Location = new System.Drawing.Point(265, 56);
             this.epsilonLabel.Name = "stepLabel";
             this.epsilonLabel.Size = new System.Drawing.Size(32, 13);
             this.epsilonLabel.TabIndex = 5;
-            this.epsilonLabel.Text = "ε = ";
+            this.epsilonLabel.Text = "ε = ";*/
             // 
             // epsilonValue
             // 
+            /*
             this.epsilonValue.AutoSize = true;
             this.epsilonValue.Location = new System.Drawing.Point(290, 56);
             this.epsilonValue.Name = "stepLabel";
             this.epsilonValue.Size = new System.Drawing.Size(32, 13);
             this.epsilonValue.TabIndex = 5;
-            this.epsilonValue.Text = "N/A";
+            this.epsilonValue.Text = "N/A";*/
 
             
             // 
@@ -585,6 +699,13 @@ namespace nk_lab_4
                 this.standart[i].Size = new System.Drawing.Size(80, 17);
                 this.standart[i].ThreeState = true;
                 this.standart[i].UseVisualStyleBackColor = true;
+
+
+                this.standartRecognized[i].AutoSize = true;
+                this.standartRecognized[i].Location = new System.Drawing.Point(13, 6);
+                this.standartRecognized[i].Size = new System.Drawing.Size(80, 17);
+                this.standartRecognized[i].ThreeState = true;
+                this.standartRecognized[i].UseVisualStyleBackColor = true;
             }
             // 
             // neuronVisual
@@ -606,38 +727,42 @@ namespace nk_lab_4
             }
 
             // 
-            // alphaSystem
+            // allWork
             // 
-            /*
-            this.alphaSystem.AutoSize = true;
-            this.alphaSystem.Location = new System.Drawing.Point(216, 26);
-            this.alphaSystem.Name = "alpha";
-            this.alphaSystem.Size = new System.Drawing.Size(31, 17);
-            this.alphaSystem.TabIndex = 0;
-            this.alphaSystem.TabStop = true;
-            this.alphaSystem.Text = "α";
-            this.alphaSystem.UseVisualStyleBackColor = true;
+            this.allWork.AutoSize = true;
+            this.allWork.Location = new System.Drawing.Point(130, 30);
+            this.allWork.Name = "allWork";
+            this.allWork.Size = new System.Drawing.Size(31, 17);
+            this.allWork.TabIndex = 0;
+            this.allWork.TabStop = true;
+            this.allWork.Text = "all neurons work";
+            this.allWork.UseVisualStyleBackColor = true;
+
             // 
-            // gammaSystem
+            // randWork
             // 
-            this.gammaSystem.AutoSize = true;
-            this.gammaSystem.Location = new System.Drawing.Point(253, 26);
-            this.gammaSystem.Name = "gamma";
-            this.gammaSystem.Size = new System.Drawing.Size(31, 17);
-            this.gammaSystem.TabIndex = 1;
-            this.gammaSystem.TabStop = true;
-            this.gammaSystem.Text = "γ";
-            this.gammaSystem.UseVisualStyleBackColor = true;
+            this.randWork.AutoSize = true;
+            this.randWork.Location = new System.Drawing.Point(130, 45);
+            this.randWork.Name = "randWork";
+            this.randWork.Size = new System.Drawing.Size(31, 17);
+            this.randWork.TabIndex = 0;
+            this.randWork.TabStop = true;
+            this.randWork.Text = "random neuron work";
+            this.randWork.UseVisualStyleBackColor = true;
+
             // 
-            // label1
+            // quantWork
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(100, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Reinforcement system:";
-            */
+            this.quantWork.AutoSize = true;
+            this.quantWork.Location = new System.Drawing.Point(130, 60);
+            this.quantWork.Name = "quantWork";
+            this.quantWork.Size = new System.Drawing.Size(31, 17);
+            this.quantWork.TabIndex = 0;
+            this.quantWork.TabStop = true;
+            this.quantWork.Text = "quantity of neurons work";
+            this.quantWork.UseVisualStyleBackColor = true;
+
+
             
 
 
@@ -675,11 +800,14 @@ namespace nk_lab_4
             this.Controls.Add(this.widthValue);
             this.Controls.Add(this.height);
             this.Controls.Add(this.heightValue);
-            this.Controls.Add(this.epsilonLabel);
-            this.Controls.Add(this.epsilonValue);
+            this.Controls.Add(this.allWork);
+            this.Controls.Add(this.randWork);
+            this.Controls.Add(this.quantWork);
+            //this.Controls.Add(this.epsilonLabel);
+            //this.Controls.Add(this.epsilonValue);
             /*this.Controls.Add(this.stepValue);*/
-            this.Controls.Add(this.coeficient);
-            this.Controls.Add(this.coeficientValue);
+            //this.Controls.Add(this.coeficient);
+            //this.Controls.Add(this.coeficientValue);
 
 
             //this.Controls.Add(this.label2);
@@ -696,6 +824,7 @@ namespace nk_lab_4
                     this.Controls.Add(letters[j][i]);
                 }
                 this.Controls.Add(this.standart[i]);
+                this.Controls.Add(this.standartRecognized[i]);
                 this.Controls.Add(this.neuronVisual[i]);
             }
 
@@ -717,6 +846,7 @@ namespace nk_lab_4
                 {
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
                     standart[i].Location = new System.Drawing.Point(5, 5);
+                    standartRecognized[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
             //this.showCheck.Location = new System.Drawing.Point(0, 0);
@@ -749,6 +879,7 @@ namespace nk_lab_4
                     letters[j][i].Location = new System.Drawing.Point(x + j * offset, y);
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
+                this.standartRecognized[i].Location = new System.Drawing.Point(x + letters.Count * 2 * offset + step, y);
             }
         }
         #endregion
@@ -757,20 +888,24 @@ namespace nk_lab_4
 
         protected System.Windows.Forms.Label height;
         protected System.Windows.Forms.Label width;
-        protected System.Windows.Forms.Label epsilonLabel;
-        protected System.Windows.Forms.Label epsilonValue;
-        protected System.Windows.Forms.Label coeficient;
+        //protected System.Windows.Forms.Label epsilonLabel;
+        //protected System.Windows.Forms.Label epsilonValue;
+        //protected System.Windows.Forms.Label coeficient;
         protected System.Windows.Forms.TextBox heightValue;
         protected System.Windows.Forms.TextBox widthValue;
         //protected System.Windows.Forms.TextBox stepValue;
-        protected System.Windows.Forms.TextBox coeficientValue;
+        //protected System.Windows.Forms.TextBox coeficientValue;
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
+        protected System.Windows.Forms.CheckBox[] standartRecognized;
         protected System.Windows.Forms.Button showCheck;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
         private System.Windows.Forms.Label[] neuronVisual;
+        protected System.Windows.Forms.RadioButton allWork;
+        protected System.Windows.Forms.RadioButton randWork;
+        protected System.Windows.Forms.RadioButton quantWork;
 
         //protected System.Windows.Forms.RadioButton alphaSystem;
         //protected System.Windows.Forms.RadioButton gammaSystem;

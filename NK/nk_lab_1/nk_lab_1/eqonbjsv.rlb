@@ -99,7 +99,6 @@ namespace nk_lab_1
         private int[] input;
         private Neuron[] neurons = new Neuron[Constants.NeuronCount];
         private int epoch;
-        private bool succTeach = false;
         public int Epoch
         {
             get
@@ -210,20 +209,19 @@ namespace nk_lab_1
                         {
                             if (epoch < Constants.MaxEpoch)
                             {
-                                succTeach = true;
                                 WriteToLog(CheckStandart(inputs[j]), "result  ", j);
                                 WriteToLog(outStandart[j], "standard", j);
                                 Teach(inputs, outStandart);
                             }
                             else
                             {
-                                succTeach = false;
+                                return false;
                             }
                         }
                     }
                 }
             }
-            return succTeach;
+            return true;
         }
         public void WriteToLog(int[] arr, string arrayName, int curIter)
         {
