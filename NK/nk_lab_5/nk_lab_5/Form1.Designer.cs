@@ -118,13 +118,13 @@ namespace nk_lab_5
                 sensor[i] = new Sensor(vector[i]);
             }
         }
-        public void InitAxons(List<double> weightsInit)
+        public void InitAxons(List<List<double>> weightsInit)
         {
             WriteToLogString(" ========== WEIGHTS ========== ");
             WriteToLogHead(axon[0].Weight, "w", 5);
             for(int i = 0; i < axon.Length; i++)
             {
-                axon[i].InitWeight(weightsInit);
+                axon[i].InitWeight(weightsInit[i]);
                 WriteToLog(axon[i].Weight, "A", i);
             }
         }

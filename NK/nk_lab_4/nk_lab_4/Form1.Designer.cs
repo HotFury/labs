@@ -478,17 +478,13 @@ namespace nk_lab_4
         public void MakeVisual(int num)
         {
             neuronVisual[num].BackColor = System.Drawing.Color.GreenYellow;
-           /* for (int i = 0; i < hopfieldNet.Input.Length; i++)
-            {
-                if (hopfieldNet.Input[i] == 1)
-                {
-                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Indeterminate;
-                }
-                else
-                {
-                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
-                }
-            }*/
+        }
+        public void MakeVisualLet(int num, int val)
+        {
+            if (val == 1)
+                standartRecognized[num].CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            else
+                standartRecognized[num].CheckState = System.Windows.Forms.CheckState.Unchecked;
         }
         public void ResetVisual()
         {
@@ -523,11 +519,6 @@ namespace nk_lab_4
             this.height = new System.Windows.Forms.Label();
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
-            /*this.stepValue = new System.Windows.Forms.TextBox();
-            this.epsilonLabel = new System.Windows.Forms.Label();
-            this.epsilonValue = new System.Windows.Forms.Label();
-            this.coeficient = new System.Windows.Forms.Label();
-            this.coeficientValue = new System.Windows.Forms.TextBox();*/
             this.showCheck = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
@@ -561,11 +552,6 @@ namespace nk_lab_4
 
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-
-            /*this.alphaSystem = new System.Windows.Forms.RadioButton();
-            this.gammaSystem = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();*/
-
             this.SuspendLayout();
             // 
             // heightValue
@@ -599,48 +585,7 @@ namespace nk_lab_4
             this.widthValue.Name = "widthValue";
             this.widthValue.Size = new System.Drawing.Size(32, 20);
             this.widthValue.TabIndex = 4;
-
-
-            // 
-            // associatorCountValue
-            //
-            /*
-            this.coeficientValue.Location = new System.Drawing.Point(207, 53);
-            this.coeficientValue.Name = "associatorCountValue";
-            this.coeficientValue.Size = new System.Drawing.Size(32, 20);
-            this.coeficientValue.TabIndex = 4;*/
-            // 
-            // associatorCountLabel
-            // 
-            /*
-            this.coeficient.AutoSize = true;
-            this.coeficient.Location = new System.Drawing.Point(106, 56);
-            this.coeficient.Name = "associatorCountLabel";
-            this.coeficient.Size = new System.Drawing.Size(36, 13);
-            this.coeficient.TabIndex = 3;
-            this.coeficient.Text = "Coeficient value(k):";*/
-            // 
-            // epsilonLabel
-            // 
-            /*
-            this.epsilonLabel.AutoSize = true;
-            this.epsilonLabel.Location = new System.Drawing.Point(265, 56);
-            this.epsilonLabel.Name = "stepLabel";
-            this.epsilonLabel.Size = new System.Drawing.Size(32, 13);
-            this.epsilonLabel.TabIndex = 5;
-            this.epsilonLabel.Text = "ε = ";*/
-            // 
-            // epsilonValue
-            // 
-            /*
-            this.epsilonValue.AutoSize = true;
-            this.epsilonValue.Location = new System.Drawing.Point(290, 56);
-            this.epsilonValue.Name = "stepLabel";
-            this.epsilonValue.Size = new System.Drawing.Size(32, 13);
-            this.epsilonValue.TabIndex = 5;
-            this.epsilonValue.Text = "N/A";*/
-
-            
+                        
             // 
             // showCheck
             // 
@@ -803,20 +748,7 @@ namespace nk_lab_4
             this.Controls.Add(this.allWork);
             this.Controls.Add(this.randWork);
             this.Controls.Add(this.quantWork);
-            //this.Controls.Add(this.epsilonLabel);
-            //this.Controls.Add(this.epsilonValue);
-            /*this.Controls.Add(this.stepValue);*/
-            //this.Controls.Add(this.coeficient);
-            //this.Controls.Add(this.coeficientValue);
-
-
-            //this.Controls.Add(this.label2);
-            //this.Controls.Add(this.maxEpochCountInit);
-            //this.Controls.Add(this.label1);
-            //this.Controls.Add(this.gammaSystem);
-            //this.Controls.Add(this.alphaSystem);
-
-
+            
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 for (int j = 0; j < letters.Count; j++)
@@ -849,7 +781,6 @@ namespace nk_lab_4
                     standartRecognized[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
-            //this.showCheck.Location = new System.Drawing.Point(0, 0);
             this.teach.Location = new System.Drawing.Point(10, 100);
             this.recognize.Location = new System.Drawing.Point(10, 125);
             int width = letterWidth;
@@ -879,7 +810,7 @@ namespace nk_lab_4
                     letters[j][i].Location = new System.Drawing.Point(x + j * offset, y);
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
-                this.standartRecognized[i].Location = new System.Drawing.Point(x + letters.Count * 2 * offset + step, y);
+                this.standartRecognized[i].Location = new System.Drawing.Point(x + (letters.Count + 1) * 2 * offset + step, y);
             }
         }
         #endregion
@@ -888,13 +819,8 @@ namespace nk_lab_4
 
         protected System.Windows.Forms.Label height;
         protected System.Windows.Forms.Label width;
-        //protected System.Windows.Forms.Label epsilonLabel;
-        //protected System.Windows.Forms.Label epsilonValue;
-        //protected System.Windows.Forms.Label coeficient;
         protected System.Windows.Forms.TextBox heightValue;
         protected System.Windows.Forms.TextBox widthValue;
-        //protected System.Windows.Forms.TextBox stepValue;
-        //protected System.Windows.Forms.TextBox coeficientValue;
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.CheckBox[] standartRecognized;
@@ -906,14 +832,6 @@ namespace nk_lab_4
         protected System.Windows.Forms.RadioButton allWork;
         protected System.Windows.Forms.RadioButton randWork;
         protected System.Windows.Forms.RadioButton quantWork;
-
-        //protected System.Windows.Forms.RadioButton alphaSystem;
-        //protected System.Windows.Forms.RadioButton gammaSystem;
-        //private System.Windows.Forms.Label label1;
-        //protected System.Windows.Forms.TextBox maxEpochCountInit;
-        //private System.Windows.Forms.Label label2;
-
-
         protected int count;
     }
 }

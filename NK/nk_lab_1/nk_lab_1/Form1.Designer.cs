@@ -31,7 +31,7 @@ public static class Constants
     private static readonly int[] outSt4two = { -1, -1};
 
     private static readonly int[] outSt1four = { 1,-1,-1,-1 };
-    private static readonly int[] outSt2four = {-1, 1,-1, 1 };
+    private static readonly int[] outSt2four = {-1, 1,-1,-1 };
     private static readonly int[] outSt3four = {-1,-1, 1,-1 };
     private static readonly int[] outSt4four = {-1,-1,-1, 1 };
     public static void InitConstants(int neurCnt, int maxEpochCount)

@@ -62,7 +62,7 @@ namespace nk_lab_1
                 standartLetters.Add(letter);
             }
             if (neuronNet.Teach(standartLetters, Constants.outStandart))
-                System.Windows.Forms.MessageBox.Show("Teach successful. Epoch count: " + (neuronNet.Epoch/4).ToString() + ". View 'log.txt' for more information.");
+                System.Windows.Forms.MessageBox.Show("Teach successful. Epoch count: " + (neuronNet.Epoch/Constants.lettersCount).ToString() + ". View 'log.txt' for more information.");
             else
                 System.Windows.Forms.MessageBox.Show("Teach imposible");
             

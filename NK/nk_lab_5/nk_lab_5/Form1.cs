@@ -15,7 +15,7 @@ namespace nk_lab_5
     {
         KohonenNet kohNet;
         int maxLength;
-        List<double> weightsInit = new List<double>();
+        List<List<double>> weightsInit = new List<List<double>>();
         Random rand = new Random();
         public Form1()
         {
@@ -102,9 +102,14 @@ namespace nk_lab_5
 
                 log.WriteToLogString("α = " + alphaValue.Text + "; R = " + rValue.Text + "; k = " + kValue.Text);
                 kohNet = new KohonenNet(vectors[0].Count, alphaVal, radiusVal, coeff);
-                for (int i = 0; i < maxLength; i++ )
+                for (int j = 0; j < vectors.Count; j++)
                 {
-                    weightsInit.Add((double)rand.Next(1, 10) / 10);
+                    List<double> curW = new List<double>();
+                    for (int i = 0; i < maxLength; i++)
+                    {
+                        curW.Add((double)rand.Next(1, 10) / 10);
+                    }
+                    weightsInit.Add(curW);
                 }
                 kohNet.InitAxons(weightsInit);
                 if (kohNet.Teach(vectors))

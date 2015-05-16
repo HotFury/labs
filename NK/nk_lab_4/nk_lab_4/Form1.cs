@@ -17,6 +17,11 @@ namespace nk_lab_4
         public delegate void MakeVisualDel(int num);
         MakeVisualDel makeVisDel;
         Thread t1;
+
+        public delegate void MakeVisualLetDel(int num, int val);
+        MakeVisualLetDel makeVisLetDel;
+        Thread t2;
+
         private int inputSize;
         HopfieldNet hopfieldNet;
         public Form1()
@@ -95,10 +100,13 @@ namespace nk_lab_4
             t1 = new Thread(StartAnim); // создаем поток  
             t1.IsBackground = true; // задаем фоновый режым  
             t1.Priority = ThreadPriority.Lowest; // указываем свмый низкий приоритет  
-            t1.Start(); // стартуем 
-            DrawLettersHistory(hopfieldNet.LettersHistory);
-            MessageBox.Show("Recognize successfull!");
-            
+            t1.Start(); // стартуем
+
+            makeVisLetDel = new MakeVisualLetDel(MakeVisualLet);
+            t2 = new Thread(StartAnimLet); // создаем поток  
+            t2.IsBackground = true; // задаем фоновый режым  
+            t2.Priority = ThreadPriority.Lowest; // указываем свмый низкий приоритет  
+            t2.Start(); // стартуем
         }
         void StartAnim()
         {
@@ -109,9 +117,22 @@ namespace nk_lab_4
                     int num = curNum;
                     Invoke(makeVisDel, num);
                 }
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(70);
                 ResetVisual();
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(50);
+            }
+            MessageBox.Show("Recognize successfull!");
+        }
+
+        void StartAnimLet()
+        {
+            foreach(List<int> curLetter in hopfieldNet.LettersHistory)
+            {
+                for (int i = 0; i < curLetter.Count; i++ )
+                {
+                    Invoke(makeVisLetDel, i, curLetter[i]);
+                }
+                System.Threading.Thread.Sleep(120);
             }
         }
         private void about_Click(object sender, EventArgs e)
