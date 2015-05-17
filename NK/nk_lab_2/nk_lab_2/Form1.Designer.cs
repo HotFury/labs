@@ -656,8 +656,11 @@ namespace nk_lab_2
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.showCheck = new System.Windows.Forms.Button();
+            this.signs = new System.Windows.Forms.Label[Constants.lettersCount];
+            this.toRecSign = new System.Windows.Forms.Label();
             for (int i = 0; i < Constants.lettersCount; i++)
             {
+                signs[i] = new System.Windows.Forms.Label();
                 System.Windows.Forms.CheckBox[] letter = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
                 for (int j = 0; j < Constants.maxInputCount; j++)
                 {
@@ -842,23 +845,28 @@ namespace nk_lab_2
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Reinforcement system:";
-            // 
-            // maxEpochCountInit
-            // 
-            /*this.maxEpochCountInit.Location = new System.Drawing.Point(387, 25);
-            this.maxEpochCountInit.Name = "maxEpochCountInit";
-            this.maxEpochCountInit.Size = new System.Drawing.Size(41, 20);
-            this.maxEpochCountInit.TabIndex = 6;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(267, 28);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Maximum epoch count:";*/
-
+            //
+            //toRecSign
+            //
+            this.toRecSign.AutoSize = true;
+            this.toRecSign.Location = new System.Drawing.Point(5, 5);
+            this.toRecSign.Name = "toRecSign";
+            this.toRecSign.Size = new System.Drawing.Size(32, 13);
+            this.toRecSign.TabIndex = 5;
+            this.toRecSign.Text = "for rcognize";
+            //
+            //signs
+            //
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.signs[i].AutoSize = true;
+                //this.signs[i].BackColor = System.Drawing.Color.Cyan;
+                this.signs[i].Location = new System.Drawing.Point(0, 0);
+                this.signs[i].Name = "signs" + i.ToString();
+                this.signs[i].Size = new System.Drawing.Size(35, 13);
+                this.signs[i].TabIndex = 0;
+                this.signs[i].Text = "Sing №" + (i + 1);
+            }
 
             // 
             // pictureBox1
@@ -914,7 +922,11 @@ namespace nk_lab_2
                 }
                 this.Controls.Add(this.standart[i]);
             }
-
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.Controls.Add(this.signs[i]);
+            }
+            this.Controls.Add(this.toRecSign);
 
             this.Name = "Form1";
             this.Text = "Rozenblatt perceptron";
@@ -961,6 +973,11 @@ namespace nk_lab_2
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(letters[i][0].Location.X, y + 15);
+            }
+            toRecSign.Location = new System.Drawing.Point(standart[0].Location.X, y + 15);
         }
         #endregion
 
@@ -986,6 +1003,9 @@ namespace nk_lab_2
         private System.Windows.Forms.Label label1;
         //protected System.Windows.Forms.TextBox maxEpochCountInit;
         //private System.Windows.Forms.Label label2;
+
+        protected System.Windows.Forms.Label[] signs;
+        protected System.Windows.Forms.Label toRecSign;
 
 
         protected int count;

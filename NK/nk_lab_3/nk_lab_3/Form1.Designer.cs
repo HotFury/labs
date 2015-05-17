@@ -503,8 +503,11 @@ namespace nk_lab_3
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.showCheck = new System.Windows.Forms.Button();
+            this.signs = new System.Windows.Forms.Label[Constants.lettersCount];
+            this.toRecSign = new System.Windows.Forms.Label();
             for (int i = 0; i < Constants.lettersCount; i++)
             {
+                signs[i] = new System.Windows.Forms.Label();
                 System.Windows.Forms.CheckBox[] letter = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
                 for (int j = 0; j < Constants.maxInputCount; j++)
                 {
@@ -526,6 +529,28 @@ namespace nk_lab_3
             this.label1 = new System.Windows.Forms.Label();*/
 
             this.SuspendLayout();
+            //
+            //signs
+            //
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.signs[i].AutoSize = true;
+                //this.signs[i].BackColor = System.Drawing.Color.Cyan;
+                this.signs[i].Location = new System.Drawing.Point(0, 0);
+                this.signs[i].Name = "signs" + i.ToString();
+                this.signs[i].Size = new System.Drawing.Size(35, 13);
+                this.signs[i].TabIndex = 0;
+                this.signs[i].Text = "Sing №" + (i + 1);
+            }
+            //
+            //toRecSign
+            //
+            this.toRecSign.AutoSize = true;
+            this.toRecSign.Location = new System.Drawing.Point(5, 5);
+            this.toRecSign.Name = "toRecSign";
+            this.toRecSign.Size = new System.Drawing.Size(32, 13);
+            this.toRecSign.TabIndex = 5;
+            this.toRecSign.Text = "for rcognize";
             // 
             // heightValue
             // 
@@ -656,46 +681,8 @@ namespace nk_lab_3
                 this.standart[i].Size = new System.Drawing.Size(80, 17);
                 this.standart[i].ThreeState = true;
                 this.standart[i].UseVisualStyleBackColor = true;
-            }
-
-
-
-            // 
-            // alphaSystem
-            // 
-            /*
-            this.alphaSystem.AutoSize = true;
-            this.alphaSystem.Location = new System.Drawing.Point(216, 26);
-            this.alphaSystem.Name = "alpha";
-            this.alphaSystem.Size = new System.Drawing.Size(31, 17);
-            this.alphaSystem.TabIndex = 0;
-            this.alphaSystem.TabStop = true;
-            this.alphaSystem.Text = "α";
-            this.alphaSystem.UseVisualStyleBackColor = true;
-            // 
-            // gammaSystem
-            // 
-            this.gammaSystem.AutoSize = true;
-            this.gammaSystem.Location = new System.Drawing.Point(253, 26);
-            this.gammaSystem.Name = "gamma";
-            this.gammaSystem.Size = new System.Drawing.Size(31, 17);
-            this.gammaSystem.TabIndex = 1;
-            this.gammaSystem.TabStop = true;
-            this.gammaSystem.Text = "γ";
-            this.gammaSystem.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(100, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Reinforcement system:";
-            */
+            }     
             
-
-
             // 
             // pictureBox1
             // 
@@ -705,15 +692,7 @@ namespace nk_lab_3
             this.pictureBox1.Size = new System.Drawing.Size(100, 88);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            // 
-
-
-
-
-
-
-
-
+            
             // 
             // Form1
             // 
@@ -735,15 +714,7 @@ namespace nk_lab_3
             /*this.Controls.Add(this.stepValue);*/
             this.Controls.Add(this.coeficient);
             this.Controls.Add(this.coeficientValue);
-
-
-            //this.Controls.Add(this.label2);
-            //this.Controls.Add(this.maxEpochCountInit);
-            //this.Controls.Add(this.label1);
-            //this.Controls.Add(this.gammaSystem);
-            //this.Controls.Add(this.alphaSystem);
-
-
+            
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 for (int j = 0; j < letters.Count; j++)
@@ -753,6 +724,11 @@ namespace nk_lab_3
                 this.Controls.Add(this.standart[i]);
             }
 
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.Controls.Add(this.signs[i]);
+            }
+            this.Controls.Add(this.toRecSign);
 
             this.Name = "Form1";
             this.Text = "Hemming net";
@@ -773,6 +749,11 @@ namespace nk_lab_3
                     standart[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(5, 5);
+            }
+            toRecSign.Location = new System.Drawing.Point(5, 5);
             //this.showCheck.Location = new System.Drawing.Point(0, 0);
             this.teach.Location = new System.Drawing.Point(10, 100);
             this.recognize.Location = new System.Drawing.Point(10, 125);
@@ -799,6 +780,11 @@ namespace nk_lab_3
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(letters[i][0].Location.X, y + 15);
+            }
+            toRecSign.Location = new System.Drawing.Point(standart[0].Location.X, y + 15);
         }
         #endregion
 
@@ -820,12 +806,8 @@ namespace nk_lab_3
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
 
-        //protected System.Windows.Forms.RadioButton alphaSystem;
-        //protected System.Windows.Forms.RadioButton gammaSystem;
-        //private System.Windows.Forms.Label label1;
-        //protected System.Windows.Forms.TextBox maxEpochCountInit;
-        //private System.Windows.Forms.Label label2;
-
+        protected System.Windows.Forms.Label[] signs;
+        protected System.Windows.Forms.Label toRecSign;
 
         protected int count;
     }

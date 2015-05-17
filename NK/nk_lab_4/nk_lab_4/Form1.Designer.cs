@@ -6,7 +6,7 @@ using System.Windows.Forms;
 public static class Constants
 {
     public const int lettersCount = 3;
-    public const int maxInputCount = 30;
+    public const int maxInputCount = 150;
     
 }
 namespace nk_lab_4
@@ -106,12 +106,12 @@ namespace nk_lab_4
                     outString += String.Format("{0,5:0.0}", val.Threshold) + "|";
                 }
             }
-            else if (whatOut == "outputDec")
+            else if (whatOut == "input")
             {
                 foreach (A_neuron val in values)
                 {
                     bounder += bound;
-                    outString += String.Format("{0,5:0.0}", val.OutputDec) + "|";
+                    outString += String.Format("{0,2:0}", val.Input) + ",";
                 }
             }
             else if (whatOut == "output")
@@ -520,6 +520,7 @@ namespace nk_lab_4
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
             this.showCheck = new System.Windows.Forms.Button();
+            this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
@@ -528,9 +529,13 @@ namespace nk_lab_4
             this.allWork = new System.Windows.Forms.RadioButton();
             this.randWork = new System.Windows.Forms.RadioButton();
             this.quantWork = new System.Windows.Forms.RadioButton();
+            this.signs = new System.Windows.Forms.Label[Constants.lettersCount];
+            this.toRecSign = new System.Windows.Forms.Label();
+            this.recSign = new System.Windows.Forms.Label();
             for (int i = 0; i < Constants.lettersCount; i++)
             {
                 System.Windows.Forms.CheckBox[] letter = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
+                signs[i] = new System.Windows.Forms.Label();
                 for (int j = 0; j < Constants.maxInputCount; j++)
                 {
                     letter[j] = new System.Windows.Forms.CheckBox();
@@ -549,7 +554,7 @@ namespace nk_lab_4
             {
                 this.standartRecognized[i] = new System.Windows.Forms.CheckBox();
             }
-
+            this.visLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -596,6 +601,17 @@ namespace nk_lab_4
             this.showCheck.Text = "Create net";
             this.showCheck.UseVisualStyleBackColor = true;
             this.showCheck.Click += new System.EventHandler(this.showCheck_Click);
+
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(450, 5);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(75, 70);
+            this.test.TabIndex = 6;
+            this.test.Text = "Test";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
             //
             // teach
             //
@@ -665,11 +681,55 @@ namespace nk_lab_4
                 this.neuronVisual[i].Size = new System.Drawing.Size(35, 13);
                 this.neuronVisual[i].TabIndex = 0;
                 if (i < 10)
+                    this.neuronVisual[i].Text = "  A" + i + "  ";
+                else if (i >= 10 && i < 100)
                     this.neuronVisual[i].Text = " A" + i + " ";
                 else
                     this.neuronVisual[i].Text = "A" + i;
 
             }
+            //
+            //signs
+            //
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.signs[i].AutoSize = true;
+                //this.signs[i].BackColor = System.Drawing.Color.Cyan;
+                this.signs[i].Location = new System.Drawing.Point(0, 0);
+                this.signs[i].Name = "signs" + i.ToString();
+                this.signs[i].Size = new System.Drawing.Size(35, 13);
+                this.signs[i].TabIndex = 0;
+                this.signs[i].Text = "Sing №" + (i + 1) ;
+            }
+            //
+            //recSign
+            //
+            this.recSign.AutoSize = true;
+            this.recSign.Location = new System.Drawing.Point(5, 5);
+            this.recSign.Name = "recSign";
+            this.recSign.Size = new System.Drawing.Size(32, 13);
+            this.recSign.TabIndex = 5;
+            this.recSign.Text = "rcognized";
+            //
+            //toRecSign
+            //
+            this.toRecSign.AutoSize = true;
+            this.toRecSign.Location = new System.Drawing.Point(5, 5);
+            this.toRecSign.Name = "toRecSign";
+            this.toRecSign.Size = new System.Drawing.Size(32, 13);
+            this.toRecSign.TabIndex = 5;
+            this.toRecSign.Text = "for rcognize";
+
+            //
+            //visLabel
+            //
+            this.visLabel.AutoSize = true;
+            this.visLabel.Location = new System.Drawing.Point(5, 5);
+            this.visLabel.Name = "toRecSign";
+            this.visLabel.Size = new System.Drawing.Size(32, 13);
+            this.visLabel.TabIndex = 5;
+            this.visLabel.Text = "Neurons activity";
+
 
             // 
             // allWork
@@ -738,6 +798,7 @@ namespace nk_lab_4
             this.Controls.Add(this.pictureBox1);
 
             this.Controls.Add(this.showCheck);
+            this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
             this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
@@ -748,6 +809,7 @@ namespace nk_lab_4
             this.Controls.Add(this.allWork);
             this.Controls.Add(this.randWork);
             this.Controls.Add(this.quantWork);
+            this.Controls.Add(this.visLabel);
             
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
@@ -759,8 +821,12 @@ namespace nk_lab_4
                 this.Controls.Add(this.standartRecognized[i]);
                 this.Controls.Add(this.neuronVisual[i]);
             }
-
-
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.Controls.Add(this.signs[i]);
+            }
+            this.Controls.Add(this.recSign);
+            this.Controls.Add(this.toRecSign);
             this.Name = "Form1";
             this.Text = "Hopfield network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -774,6 +840,7 @@ namespace nk_lab_4
         {
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
+                this.neuronVisual[i].Location = new System.Drawing.Point(5, 5);
                 for (int j = 0; j < letters.Count; j++)
                 {
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
@@ -781,6 +848,13 @@ namespace nk_lab_4
                     standartRecognized[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(5, 5);
+            }
+            toRecSign.Location = new System.Drawing.Point(5, 5);
+            recSign.Location = new System.Drawing.Point(5, 5);
+            visLabel.Location = new System.Drawing.Point(5, 5);
             this.teach.Location = new System.Drawing.Point(10, 100);
             this.recognize.Location = new System.Drawing.Point(10, 125);
             int width = letterWidth;
@@ -789,29 +863,42 @@ namespace nk_lab_4
             int xConst = 110;
             int x = xConst;
             int step = 15;
-            int xx = 20;
-            int yy = 250;
+            int labelX = 100;
+            int labelY = y + letterHeight * 15 + 50;
+            int xx = labelX;
+            int yy = labelY + 20;
             int offset = letterWidth * step + step;
+            int labelOffset = 0;
             for (int i = 0; i < count; i++)
             {
-
-                this.neuronVisual[i].Location = new System.Drawing.Point(xx + 30 * i, yy);
-
+                labelOffset++;
                 if (i + 1 > width)
                 {
+                    labelOffset = 1;
                     x = xConst;
                     y += step;
                     width += letterWidth;
+                    xx = labelX;
+                    yy += step;
 
                 }
                 x += step;
+                this.neuronVisual[i].Location = new System.Drawing.Point(xx + labelOffset * 35, yy);
                 for (int j = 0; j < letters.Count; j++)
                 {
                     letters[j][i].Location = new System.Drawing.Point(x + j * offset, y);
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
-                this.standartRecognized[i].Location = new System.Drawing.Point(x + (letters.Count + 1) * 2 * offset + step, y);
+                this.standartRecognized[i].Location = new System.Drawing.Point(x + (letters.Count + 1) * offset + step, y);
             }
+            visLabel.Location = new System.Drawing.Point(neuronVisual[0].Location.X, neuronVisual[0].Location.Y - 20);
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(letters[i][0].Location.X, y + 15);
+            }
+            toRecSign.Location = new System.Drawing.Point(standart[0].Location.X, y + 15);
+            recSign.Location = new System.Drawing.Point(standartRecognized[0].Location.X, y + 15);
+
         }
         #endregion
 
@@ -825,6 +912,7 @@ namespace nk_lab_4
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.CheckBox[] standartRecognized;
         protected System.Windows.Forms.Button showCheck;
+        protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
@@ -833,6 +921,11 @@ namespace nk_lab_4
         protected System.Windows.Forms.RadioButton randWork;
         protected System.Windows.Forms.RadioButton quantWork;
         protected int count;
+
+        protected System.Windows.Forms.Label[] signs;
+        protected System.Windows.Forms.Label toRecSign;
+        protected System.Windows.Forms.Label recSign;
+        protected System.Windows.Forms.Label visLabel;
     }
 }
 

@@ -309,8 +309,10 @@ namespace nk_lab_1
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.showCheck = new System.Windows.Forms.Button();
+            this.signs = new System.Windows.Forms.Label[Constants.lettersCount];
             for (int i = 0; i < Constants.lettersCount; i++ )
             {
+                signs[i] = new System.Windows.Forms.Label();
                 System.Windows.Forms.CheckBox[] letter = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
                 for (int j = 0; j < Constants.maxInputCount; j++)
                 {
@@ -324,6 +326,7 @@ namespace nk_lab_1
                 this.standart[i] = new System.Windows.Forms.CheckBox();
             }
 
+            this.toRecSign = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 
@@ -485,7 +488,28 @@ namespace nk_lab_1
             this.label2.Size = new System.Drawing.Size(117, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Maximum epoch count:";
-
+            //
+            //signs
+            //
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.signs[i].AutoSize = true;
+                //this.signs[i].BackColor = System.Drawing.Color.Cyan;
+                this.signs[i].Location = new System.Drawing.Point(0, 0);
+                this.signs[i].Name = "signs" + i.ToString();
+                this.signs[i].Size = new System.Drawing.Size(35, 13);
+                this.signs[i].TabIndex = 0;
+                this.signs[i].Text = "Sing №" + (i + 1);
+            }
+            //
+            //toRecSign
+            //
+            this.toRecSign.AutoSize = true;
+            this.toRecSign.Location = new System.Drawing.Point(5, 5);
+            this.toRecSign.Name = "toRecSign";
+            this.toRecSign.Size = new System.Drawing.Size(32, 13);
+            this.toRecSign.TabIndex = 5;
+            this.toRecSign.Text = "for rcognize";
 
 
 
@@ -521,6 +545,11 @@ namespace nk_lab_1
                 }
                     this.Controls.Add(this.standart[i]);
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                this.Controls.Add(this.signs[i]);
+            }
+            this.Controls.Add(this.toRecSign);
             this.Name = "Form1";
             this.Text = "Hebb network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -539,6 +568,11 @@ namespace nk_lab_1
                     standart[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(5, 5);
+            }
+            toRecSign.Location = new System.Drawing.Point(5, 5);
                 //this.showCheck.Location = new System.Drawing.Point(0, 0);
             this.teach.Location = new System.Drawing.Point(10, 75);
             this.recognize.Location = new System.Drawing.Point(10, 100);
@@ -565,6 +599,11 @@ namespace nk_lab_1
                 }
                 this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
             }
+            for (int i = 0; i < signs.Length; i++)
+            {
+                signs[i].Location = new System.Drawing.Point(letters[i][0].Location.X, y + 15);
+            }
+            toRecSign.Location = new System.Drawing.Point(standart[0].Location.X, y + 15);
         }
 
 
@@ -589,6 +628,9 @@ namespace nk_lab_1
         protected System.Windows.Forms.TextBox maxEpochCountInit;
         private System.Windows.Forms.Label label2;
 
+
+        protected System.Windows.Forms.Label[] signs;
+        protected System.Windows.Forms.Label toRecSign;
         
         protected int count;
 
