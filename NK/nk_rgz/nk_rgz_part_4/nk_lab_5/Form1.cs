@@ -17,7 +17,7 @@ namespace nk_lab_5
         int size;
         Log log = new Log(); 
         List<List<decimal>> weightsInit = new List<List<decimal>>();
-        Random rand = new Random();
+        bool teached;
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +33,10 @@ namespace nk_lab_5
         }
         private void showCheck_Click(object sender, EventArgs e)
         {
+            teached = false;
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
             if (heightValue.Text != "" && widthValue.Text != "" && rValue.Text != "" && kValue.Text != "" && alphaValue.Text != "")
             {
                 int letterHeight = Convert.ToInt32(heightValue.Text);
@@ -45,29 +49,6 @@ namespace nk_lab_5
                 decimal coeff = Convert.ToDecimal(kValue.Text);
                 log.WriteToLogString("α = " + alphaValue.Text + "; R = " + rValue.Text + "; k = " + kValue.Text);
                 kohNet = new KohonenNet(size, alphaVal, radiusVal, coeff);
-                for (int j = 0; j < Constants.lettersCount; j++)
-                {
-                    List<decimal> curW = new List<decimal>();
-                    /*curW.Add(0.7m);
-                    curW.Add(0.4m);
-                    curW.Add(0.5m);
-                    curW.Add(0.2m);
-                    weightsInit.Add(curW);
-                    curW = new List<decimal>();
-                    curW.Add(0.6m);
-                    curW.Add(0.1m);
-                    curW.Add(0.5m);
-                    curW.Add(0.9m);
-                    weightsInit.Add(curW);*/
-
-                    for (int i = 0; i < size; i++)
-                    {
-                        curW.Add((decimal)i / Constants.maxInputCount);
-                        //curW.Add((decimal)rand.Next(1, 10) / 10);
-                    }
-                    weightsInit.Add(curW);
-                }
-                kohNet.InitAxons(weightsInit);
             }
             else
             {
@@ -76,6 +57,8 @@ namespace nk_lab_5
         }
         private void teach_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Stopwatch teachTime = new System.Diagnostics.Stopwatch();
+            teached = true;
             List<List<int>> standartLetters = new List<List<int>>();
             for (int i = 0; i < Constants.lettersCount; i++)
             {
@@ -90,15 +73,79 @@ namespace nk_lab_5
                 //log.WriteToLog(letter.ToArray(), "vec", -1);
                 standartLetters.Add(letter);
             }
-            if (kohNet.Teach(standartLetters))
+            kohNet.InitAxons(standartLetters, ref teachTime);
+            if (kohNet.Teach(standartLetters, ref loading, ref teachTime))
             {
-                MessageBox.Show("Create successful by " + kohNet.Iteration.ToString() + " iterations. View 'log.txt' for more information");
+                MessageBox.Show("Create successful by " + kohNet.Iteration.ToString() + " iterations. Teach time: " + String.Format("{0:0.0000}", ((decimal)teachTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + "mS. View 'log.txt' for more information");
             }
         }
-
+        private void test_Click(object sender, EventArgs e)
+        {
+            teached = false;
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
+            int[] letter1 = { -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter2 = { -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter3 = { -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1 };
+            int[] letter4 = { -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter5 = { -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1 };
+            List<int[]> vectors = new List<int[]>();
+            vectors.Add(letter1);
+            vectors.Add(letter2);
+            vectors.Add(letter3);
+            vectors.Add(letter4);
+            vectors.Add(letter5);
+            for (int j = 0; j < letters.Count; j++)
+            {
+                for (int i = 0; i < vectors[j].Length; i++)
+                {
+                    if (vectors[j][i] == 1)
+                    {
+                        letters[j][i].CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    }
+                    else
+                    {
+                        letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    }
+                }
+            }
+            alphaValue.Text = "0.8";
+            rValue.Text = "0";
+            kValue.Text = "0.6";
+            int letterHeight = 14;
+            int letterWidth = 10;
+            size = letterHeight * letterWidth;
+            MakeLetters(letterHeight, letterWidth);
+            File.WriteAllText("log.txt", "");
+            decimal alphaVal = Convert.ToDecimal(alphaValue.Text);
+            int radiusVal = Convert.ToInt32(rValue.Text);
+            decimal coeff = Convert.ToDecimal(kValue.Text);
+            log.WriteToLogString("α = " + alphaValue.Text + "; R = " + rValue.Text + "; k = " + kValue.Text);
+            kohNet = new KohonenNet(size, alphaVal, radiusVal, coeff);
+        }
         private void recognize_Click(object sender, EventArgs e)
         {
-            
+            System.Diagnostics.Stopwatch recTime = new System.Diagnostics.Stopwatch();
+            if (teached)
+            {
+                List<int> inLetter = new List<int>();
+                for (int j = 0; j < count; j++)
+                {
+
+                    if (standart[j].CheckState == System.Windows.Forms.CheckState.Indeterminate || standart[j].CheckState == System.Windows.Forms.CheckState.Checked)
+                        inLetter.Add(1);
+                    else
+                        inLetter.Add(0);
+
+                }
+                log.WriteToLogString("======RECOGNIZING=======");
+                MessageBox.Show("Sign №" + (kohNet.Recognize(inLetter, ref recTime) + 1) + " Recognize time: " + String.Format("{0:0.0000}", ((decimal)recTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + " mS");
+            }
+            else
+            {
+                MessageBox.Show("!!Press 'Teach' first!!");
+            }
         }
 
         private void about_Click(object sender, EventArgs e)

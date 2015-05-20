@@ -6,7 +6,7 @@ using System.Windows.Forms;
 public static class Constants
 {
     public const int lettersCount = 5;
-    public const int maxInputCount = 100;
+    public const int maxInputCount = 150;
     
 }
 namespace nk_lab_4
@@ -106,12 +106,12 @@ namespace nk_lab_4
                     outString += String.Format("{0,5:0.0}", val.Threshold) + "|";
                 }
             }
-            else if (whatOut == "outputDec")
+            else if (whatOut == "input")
             {
                 foreach (A_neuron val in values)
                 {
                     bounder += bound;
-                    outString += String.Format("{0,5:0.0}", val.OutputDec) + "|";
+                    outString += String.Format("{0,2:0}", val.Input) + ",";
                 }
             }
             else if (whatOut == "output")
@@ -328,25 +328,36 @@ namespace nk_lab_4
             input = new int[inputSize];
 
         }
-        public void InitNet(List<int[]> letters)
+        public void InitNet(List<int[]> letters, ref System.Windows.Forms.ProgressBar progBar, ref System.Diagnostics.Stopwatch teachTime)
         {
             WriteToLogHead(a_neuron[0].Weight, "A", 5);
+            teachTime.Start();
             for (int i = 0; i < a_neuron.Length; i++)
             {
+                progBar.Maximum++;
+                progBar.PerformStep();
                 a_neuron[i].InitWeight(letters, i);
+                teachTime.Stop();
                 WriteToLog(a_neuron[i].Weight, "A", i);
+                teachTime.Start();
             }
             for (int i = 0; i < a_neuron.Length; i++)
             {
+                teachTime.Stop();
+                progBar.Maximum++;
+                progBar.PerformStep();
+                teachTime.Start();
                 a_neuron[i].InitThreshold();
 
             }
+            teachTime.Stop();
             WriteToLog(a_neuron, "trhld", -1,"threshold");
         }
-        public void InitNeurons(int[] letter)
+        public void InitNeurons(int[] letter, ref System.Diagnostics.Stopwatch recTime)
         {
             List<int> neuronActiveNums = new List<int>();
             List<int> recLetter = new List<int>();
+            recTime.Start();
             for (int i = 0; i < letter.Length; i++)
             {
                 a_neuron[i].InitNeuron(letter[i]);
@@ -355,6 +366,7 @@ namespace nk_lab_4
                 input[i] = letter[i];
                 recLetter.Add(input[i]);
             }
+            recTime.Stop();
             iterations.Add(neuronActiveNums);
             lettersHistory.Add(recLetter);
         }
@@ -395,7 +407,7 @@ namespace nk_lab_4
             List<int> nums = new List<int>();
             for (int i = 0; i < input.Length; i++)
             {
-                if (input[i] != a_neuron[i].Output)
+                if (a_neuron[i].Input != a_neuron[i].Output)
                 {
                     nums.Add(i);
                 }
@@ -409,10 +421,13 @@ namespace nk_lab_4
             }
             iterations.Add(activeNum);
         }
-        public void Recognize()
+        public void Recognize(ref System.Windows.Forms.ProgressBar progBar, ref System.Diagnostics.Stopwatch recTime)
         {
+            progBar.Maximum++;
+            progBar.PerformStep();
             WriteToLog(input, "inp", -1);
             WriteToLog(a_neuron, "out", -1, "output");
+            recTime.Start();
             if (!InputOutputEqual())
             {
                 switch (mode)
@@ -432,8 +447,9 @@ namespace nk_lab_4
                 {
                     recLet.Add(input[i]);
                 }
+                recTime.Stop();
                 lettersHistory.Add(recLet);
-                Recognize();
+                Recognize(ref progBar, ref recTime);
             }
         }
         public bool InputOutputEqual()
@@ -520,6 +536,7 @@ namespace nk_lab_4
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
             this.showCheck = new System.Windows.Forms.Button();
+            this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
@@ -554,6 +571,9 @@ namespace nk_lab_4
                 this.standartRecognized[i] = new System.Windows.Forms.CheckBox();
             }
             this.visLabel = new System.Windows.Forms.Label();
+
+            this.loading = new System.Windows.Forms.ProgressBar();
+            this.loadLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -600,6 +620,17 @@ namespace nk_lab_4
             this.showCheck.Text = "Create net";
             this.showCheck.UseVisualStyleBackColor = true;
             this.showCheck.Click += new System.EventHandler(this.showCheck_Click);
+
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(450, 5);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(75, 70);
+            this.test.TabIndex = 6;
+            this.test.Text = "Test";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
             //
             // teach
             //
@@ -669,6 +700,8 @@ namespace nk_lab_4
                 this.neuronVisual[i].Size = new System.Drawing.Size(35, 13);
                 this.neuronVisual[i].TabIndex = 0;
                 if (i < 10)
+                    this.neuronVisual[i].Text = "  A" + i + "  ";
+                else if (i >= 10 && i < 100)
                     this.neuronVisual[i].Text = " A" + i + " ";
                 else
                     this.neuronVisual[i].Text = "A" + i;
@@ -754,7 +787,25 @@ namespace nk_lab_4
             this.quantWork.UseVisualStyleBackColor = true;
 
 
-            
+            // 
+            // loading
+            // 
+            this.loading.Location = new System.Drawing.Point(125, 115);
+            this.loading.Name = "loading";
+            this.loading.Size = new System.Drawing.Size(333, 23);
+            this.loading.TabIndex = 0;
+            this.loading.Visible = false;
+
+            //
+            //loadLabel
+            //
+            this.loadLabel.AutoSize = true;
+            this.loadLabel.Location = new System.Drawing.Point(125, 100);
+            this.loadLabel.Name = "loadLabel";
+            this.loadLabel.Size = new System.Drawing.Size(32, 13);
+            this.loadLabel.TabIndex = 5;
+            this.loadLabel.Visible = false;
+            this.loadLabel.Text = "Progress:";
 
 
             // 
@@ -784,6 +835,7 @@ namespace nk_lab_4
             this.Controls.Add(this.pictureBox1);
 
             this.Controls.Add(this.showCheck);
+            this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
             this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
@@ -812,6 +864,8 @@ namespace nk_lab_4
             }
             this.Controls.Add(this.recSign);
             this.Controls.Add(this.toRecSign);
+            this.Controls.Add(this.loading);
+            this.Controls.Add(this.loadLabel);
             this.Name = "Form1";
             this.Text = "Hopfield network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -823,6 +877,8 @@ namespace nk_lab_4
         }
         protected void MakeLetters(int letterHeight, int letterWidth)
         {
+            this.loading.Visible = true;
+            this.loadLabel.Visible = true;
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 this.neuronVisual[i].Location = new System.Drawing.Point(5, 5);
@@ -831,6 +887,9 @@ namespace nk_lab_4
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
                     standart[i].Location = new System.Drawing.Point(5, 5);
                     standartRecognized[i].Location = new System.Drawing.Point(5, 5);
+                    letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
                 }
             }
             for (int i = 0; i < signs.Length; i++)
@@ -844,7 +903,7 @@ namespace nk_lab_4
             this.recognize.Location = new System.Drawing.Point(10, 125);
             int width = letterWidth;
             count = letterHeight * letterWidth;
-            int y = 80;
+            int y = 150;
             int xConst = 110;
             int x = xConst;
             int step = 15;
@@ -868,7 +927,7 @@ namespace nk_lab_4
 
                 }
                 x += step;
-                this.neuronVisual[i].Location = new System.Drawing.Point(xx + labelOffset * 30, yy);
+                this.neuronVisual[i].Location = new System.Drawing.Point(xx + labelOffset * 35, yy);
                 for (int j = 0; j < letters.Count; j++)
                 {
                     letters[j][i].Location = new System.Drawing.Point(x + j * offset, y);
@@ -897,6 +956,7 @@ namespace nk_lab_4
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.CheckBox[] standartRecognized;
         protected System.Windows.Forms.Button showCheck;
+        protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
@@ -910,6 +970,9 @@ namespace nk_lab_4
         protected System.Windows.Forms.Label toRecSign;
         protected System.Windows.Forms.Label recSign;
         protected System.Windows.Forms.Label visLabel;
+
+        private System.Windows.Forms.ProgressBar loading;
+        protected System.Windows.Forms.Label loadLabel;
     }
 }
 

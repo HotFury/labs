@@ -24,20 +24,23 @@ namespace nk_lab_4
 
         private int inputSize;
         HopfieldNet hopfieldNet;
+        private bool teached;
         public Form1()
         {
             InitializeComponent();
         }
         private void showCheck_Click(object sender, EventArgs e)
         {
+            loading.Value = 0;
             if (heightValue.Text != "" && widthValue.Text != "")
             {
                 int letterHeight = Convert.ToInt32(heightValue.Text);
                 int letterWidth = Convert.ToInt32(widthValue.Text);
                 inputSize = letterHeight * letterWidth;
-                
+
                 MakeLetters(letterHeight, letterWidth);
                 File.WriteAllText("log.txt", "");
+                teached = false;
                 
             }
             else
@@ -45,9 +48,50 @@ namespace nk_lab_4
                 System.Windows.Forms.MessageBox.Show("Fill all fields");
             }
         }
+        private void test_Click(object sender, EventArgs e)
+        {
+            loading.Value = 0;
+            teached = false;
+            int letterHeight = 14;
+            int letterWidth = 10;
+            inputSize = letterHeight * letterWidth;
+            MakeLetters(letterHeight, letterWidth);
+            File.WriteAllText("log.txt", "");
+            int[] letter1 = { -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter2 = { -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter3 = { -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1 };
+            int[] letter4 = { -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter5 = { -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1 };
+           List<int[]> vectors = new List<int[]>();
+            vectors.Add(letter1);
+            vectors.Add(letter2);
+            vectors.Add(letter3);
+            vectors.Add(letter4);
+            vectors.Add(letter5);
+            //vectors.Add(letter6);
+            for (int j = 0; j < letters.Count; j++ )
+            {
+                for (int i = 0; i < vectors[j].Length; i++)
+                {
+                    if (vectors[j][i] == 1)
+                    {
+                        letters[j][i].CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    }
+                    else
+                    {
+                        letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    }
+                }
+            }
+        
+        }
         private void teach_Click(object sender, EventArgs e)
         {
-            
+            System.Diagnostics.Stopwatch teachTime = new System.Diagnostics.Stopwatch();
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
+            teached = true;
             File.WriteAllText("log.txt", "");
             List<int[]> standartLetters = new List<int[]>();
             for (int i = 0; i < Constants.lettersCount; i++)
@@ -63,52 +107,67 @@ namespace nk_lab_4
                 standartLetters.Add(letter);
             }
             hopfieldNet = new HopfieldNet(inputSize, Constants.lettersCount);
-            hopfieldNet.InitNet(standartLetters);
-            MessageBox.Show("Teach succesfull. View 'log.txt' for more information");
+            hopfieldNet.InitNet(standartLetters, ref loading, ref teachTime);
+            /*Log log = new Log();
+            foreach (int[] curLet in standartLetters)
+                log.WriteToLog(curLet, "x", 0);*/
+            MessageBox.Show("Teach succesfull. Teach time: " + String.Format("{0:0.0000}",((decimal)teachTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + "mS. View 'log.txt' for more information");
         }
         private void recognize_Click(object sender, EventArgs e)
         {
-            hopfieldNet.ReserIterations_LettersHistory();
-            if (allWork.Checked)
+            System.Diagnostics.Stopwatch recTime = new System.Diagnostics.Stopwatch();
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
+            if (teached)
             {
-                hopfieldNet.InitMode("allWork");
-            }
-            else if (randWork.Checked)
-            {
-                hopfieldNet.InitMode("randWork");
-            }
-            else if (quantWork.Checked)
-            {
-                hopfieldNet.InitMode("quantWork");
-            }
-            int[] inLetter = new int[count];
-            for (int j = 0; j < inLetter.Length; j++)
-            {
+                hopfieldNet.ReserIterations_LettersHistory();
+                if (allWork.Checked)
+                {
+                    hopfieldNet.InitMode("allWork");
+                }
+                else if (randWork.Checked)
+                {
+                    hopfieldNet.InitMode("randWork");
+                }
+                else if (quantWork.Checked)
+                {
+                    hopfieldNet.InitMode("quantWork");
+                }
+                int[] inLetter = new int[count];
+                for (int j = 0; j < inLetter.Length; j++)
+                {
 
-                if (standart[j].CheckState == System.Windows.Forms.CheckState.Indeterminate || standart[j].CheckState == System.Windows.Forms.CheckState.Checked)
-                    inLetter[j] = 1;
-                else
-                    inLetter[j] = -1;
-            }
-            hopfieldNet.InitNeurons(inLetter);
-            for (int i = 0; i < hopfieldNet.Input.Length; i++ )
-            {
-                standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
-            }
-            hopfieldNet.Recognize();
-            makeVisDel = new MakeVisualDel(MakeVisual);
-            t1 = new Thread(StartAnim); // создаем поток  
-            t1.IsBackground = true; // задаем фоновый режым  
-            t1.Priority = ThreadPriority.Lowest; // указываем свмый низкий приоритет  
-            t1.Start(); // стартуем
+                    if (standart[j].CheckState == System.Windows.Forms.CheckState.Indeterminate || standart[j].CheckState == System.Windows.Forms.CheckState.Checked)
+                        inLetter[j] = 1;
+                    else
+                        inLetter[j] = -1;
+                }
+                hopfieldNet.InitNeurons(inLetter, ref recTime);
+                for (int i = 0; i < hopfieldNet.Input.Length; i++)
+                {
+                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                }
+                hopfieldNet.Recognize(ref loading, ref recTime);
+                MessageBox.Show("Calculation complete. Now look visual");
+                makeVisDel = new MakeVisualDel(MakeVisual);
+                t1 = new Thread(StartAnim(ref recTime)); // создаем поток  
+                t1.IsBackground = true; // задаем фоновый режым  
+                t1.Priority = ThreadPriority.Lowest; // указываем свмый низкий приоритет  
+                t1.Start(); // стартуем
 
-            makeVisLetDel = new MakeVisualLetDel(MakeVisualLet);
-            t2 = new Thread(StartAnimLet); // создаем поток  
-            t2.IsBackground = true; // задаем фоновый режым  
-            t2.Priority = ThreadPriority.Lowest; // указываем свмый низкий приоритет  
-            t2.Start(); // стартуем
+                makeVisLetDel = new MakeVisualLetDel(MakeVisualLet);
+                t2 = new Thread(StartAnimLet); // создаем поток  
+                t2.IsBackground = true; // задаем фоновый режым  
+                t2.Priority = ThreadPriority.Lowest; // указываем свмый низкий приоритет  
+                t2.Start(); // стартуем
+            }
+            else
+            {
+                MessageBox.Show("!!click 'Teach' first!!");
+            }
         }
-        void StartAnim()
+        void StartAnim(ref System.Diagnostics.Stopwatch recTime)
         {
             int sleepTime = 0;
             if (randWork.Checked)
@@ -130,7 +189,7 @@ namespace nk_lab_4
                 ResetVisual();
                 System.Threading.Thread.Sleep(sleepTime);
             }
-            MessageBox.Show("Recognize successfull!");
+            MessageBox.Show("Recognize successfull! Recognize time: " + String.Format("{0:0.0000}", ((decimal)recTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + " mS.");
         }
 
         void StartAnimLet()

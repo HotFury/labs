@@ -1,3 +1,0 @@
-D:\Study\5_course\II_semestr\labs\NK\nk_rgz\Hebb_net\nk_lab_1\bin\Debug\nk_lab_1.exe.config
-D:\Study\5_course\II_semestr\labs\NK\nk_rgz\Hebb_net\nk_lab_1\obj\Debug\nk_lab_1.exe
-D:\Study\5_course\II_semestr\labs\NK\nk_rgz\Hebb_net\nk_lab_1\obj\Debug\nk_lab_1.pdb

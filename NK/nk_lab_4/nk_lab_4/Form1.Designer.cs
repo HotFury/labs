@@ -328,16 +328,20 @@ namespace nk_lab_4
             input = new int[inputSize];
 
         }
-        public void InitNet(List<int[]> letters)
+        public void InitNet(List<int[]> letters, ref System.Windows.Forms.ProgressBar progBar)
         {
             WriteToLogHead(a_neuron[0].Weight, "A", 5);
             for (int i = 0; i < a_neuron.Length; i++)
             {
+                progBar.Maximum++;
+                progBar.PerformStep();
                 a_neuron[i].InitWeight(letters, i);
                 WriteToLog(a_neuron[i].Weight, "A", i);
             }
             for (int i = 0; i < a_neuron.Length; i++)
             {
+                progBar.Maximum++;
+                progBar.PerformStep();
                 a_neuron[i].InitThreshold();
 
             }
@@ -409,8 +413,10 @@ namespace nk_lab_4
             }
             iterations.Add(activeNum);
         }
-        public void Recognize()
+        public void Recognize(ref System.Windows.Forms.ProgressBar progBar)
         {
+            progBar.Maximum++;
+            progBar.PerformStep();
             WriteToLog(input, "inp", -1);
             WriteToLog(a_neuron, "out", -1, "output");
             if (!InputOutputEqual())
@@ -433,7 +439,7 @@ namespace nk_lab_4
                     recLet.Add(input[i]);
                 }
                 lettersHistory.Add(recLet);
-                Recognize();
+                Recognize(ref progBar);
             }
         }
         public bool InputOutputEqual()
@@ -555,6 +561,9 @@ namespace nk_lab_4
                 this.standartRecognized[i] = new System.Windows.Forms.CheckBox();
             }
             this.visLabel = new System.Windows.Forms.Label();
+
+            this.loading = new System.Windows.Forms.ProgressBar();
+            this.loadLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -768,7 +777,25 @@ namespace nk_lab_4
             this.quantWork.UseVisualStyleBackColor = true;
 
 
-            
+            // 
+            // loading
+            // 
+            this.loading.Location = new System.Drawing.Point(125, 115);
+            this.loading.Name = "loading";
+            this.loading.Size = new System.Drawing.Size(333, 23);
+            this.loading.TabIndex = 0;
+            this.loading.Visible = false;
+
+            //
+            //loadLabel
+            //
+            this.loadLabel.AutoSize = true;
+            this.loadLabel.Location = new System.Drawing.Point(125, 100);
+            this.loadLabel.Name = "loadLabel";
+            this.loadLabel.Size = new System.Drawing.Size(32, 13);
+            this.loadLabel.TabIndex = 5;
+            this.loadLabel.Visible = false;
+            this.loadLabel.Text = "Progress:";
 
 
             // 
@@ -827,6 +854,8 @@ namespace nk_lab_4
             }
             this.Controls.Add(this.recSign);
             this.Controls.Add(this.toRecSign);
+            this.Controls.Add(this.loading);
+            this.Controls.Add(this.loadLabel);
             this.Name = "Form1";
             this.Text = "Hopfield network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -838,6 +867,8 @@ namespace nk_lab_4
         }
         protected void MakeLetters(int letterHeight, int letterWidth)
         {
+            this.loading.Visible = true;
+            this.loadLabel.Visible = true;
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 this.neuronVisual[i].Location = new System.Drawing.Point(5, 5);
@@ -846,6 +877,9 @@ namespace nk_lab_4
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
                     standart[i].Location = new System.Drawing.Point(5, 5);
                     standartRecognized[i].Location = new System.Drawing.Point(5, 5);
+                    letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
                 }
             }
             for (int i = 0; i < signs.Length; i++)
@@ -859,7 +893,7 @@ namespace nk_lab_4
             this.recognize.Location = new System.Drawing.Point(10, 125);
             int width = letterWidth;
             count = letterHeight * letterWidth;
-            int y = 80;
+            int y = 150;
             int xConst = 110;
             int x = xConst;
             int step = 15;
@@ -926,6 +960,9 @@ namespace nk_lab_4
         protected System.Windows.Forms.Label toRecSign;
         protected System.Windows.Forms.Label recSign;
         protected System.Windows.Forms.Label visLabel;
+
+        private System.Windows.Forms.ProgressBar loading;
+        protected System.Windows.Forms.Label loadLabel;
     }
 }
 

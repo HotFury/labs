@@ -4,8 +4,8 @@ using System.Text;
 using System;
 public static class Constants
 {
-    public const int lettersCount = 5;
-    public const int maxInputCount = 150;
+    public const int lettersCount = 4;
+    public const int maxInputCount = 30;
     private static int neuronCount;
     private static int maxEpoch;
     public static int MaxEpoch
@@ -25,37 +25,33 @@ public static class Constants
 
     public static List<int[]> outStandart ;
 
-    private static readonly int[] outSt1three = {  1,  1, 1};
-    private static readonly int[] outSt2three = { -1,  1, 1};
-    private static readonly int[] outSt3three = {  1, -1, 1};
-    private static readonly int[] outSt4three = { -1, -1, 1};
-    private static readonly int[] outSt5three = { -1, -1,-1};
+    private static readonly int[] outSt1two = {  1,  1};
+    private static readonly int[] outSt2two = { -1,  1};
+    private static readonly int[] outSt3two = {  1, -1};
+    private static readonly int[] outSt4two = { -1, -1};
 
-    private static readonly int[] outSt1five = { 1,-1,-1,-1,-1 };
-    private static readonly int[] outSt2five = {-1, 1,-1,-1,-1 };
-    private static readonly int[] outSt3five = {-1,-1, 1,-1,-1 };
-    private static readonly int[] outSt4five = {-1,-1,-1, 1,-1 };
-    private static readonly int[] outSt5five = {-1,-1,-1,-1, 1 };
+    private static readonly int[] outSt1four = { 1,-1,-1,-1 };
+    private static readonly int[] outSt2four = {-1, 1,-1,-1 };
+    private static readonly int[] outSt3four = {-1,-1, 1,-1 };
+    private static readonly int[] outSt4four = {-1,-1,-1, 1 };
     public static void InitConstants(int neurCnt, int maxEpochCount)
     {
         outStandart = new List<int[]>();
         neuronCount = neurCnt;
         maxEpoch = maxEpochCount;
-        if(neuronCount == 3 )
+        if(neuronCount == 2 )
         {
-            outStandart.Add(outSt1three);
-            outStandart.Add(outSt2three);
-            outStandart.Add(outSt3three);
-            outStandart.Add(outSt4three);
-            outStandart.Add(outSt5three);
+            outStandart.Add(outSt1two);
+            outStandart.Add(outSt2two);
+            outStandart.Add(outSt3two);
+            outStandart.Add(outSt4two);
         }
-        else if (neuronCount == 5)
+        else if (neuronCount == 4)
         {
-            outStandart.Add(outSt1five);
-            outStandart.Add(outSt2five);
-            outStandart.Add(outSt3five);
-            outStandart.Add(outSt4five);
-            outStandart.Add(outSt5five);
+            outStandart.Add(outSt1four);
+            outStandart.Add(outSt2four);
+            outStandart.Add(outSt3four);
+            outStandart.Add(outSt4four);
         }
     }
                                                
@@ -146,16 +142,14 @@ namespace nk_lab_1
                 neurons[i].NeuronOut = outPut[i];
             }
         }
-        private void CorrectWeight(ref System.Diagnostics.Stopwatch teachTime)
+        private void CorrectWeight()
         {
-            teachTime.Start();
             for (int j = 0; j < neurons.Length; j++)
             {
                 for (int i = 0; i < neurons[j].Weight.Length; i++)
                 {
                     neurons[j].Weight[i] += input[i] * neurons[j].NeuronOut;
                 }
-                teachTime.Stop();
                 WriteToLog(neurons[j].Weight, "weight", j);
             }
         }
@@ -179,15 +173,12 @@ namespace nk_lab_1
         }
         public void Recognize(int[] letter, List<int[]> standarts)
         {
-            System.Diagnostics.Stopwatch recTime = new System.Diagnostics.Stopwatch();
-            recTime.Start();
             bool recognized = false;
             for (int i = 0; i < standarts.Count; i++)
             {
                 if (ArrayEqual(CheckStandart(letter),standarts[i]))
                 {
-                    recTime.Stop();
-                    System.Windows.Forms.MessageBox.Show("Sign № " + (i + 1).ToString() + ". Recognize time: " + String.Format("{0:0.0000}",((decimal)recTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + " mS");
+                    System.Windows.Forms.MessageBox.Show("Sign № " + (i + 1).ToString());
                     recognized = true;
                     break;
                 }
@@ -196,26 +187,20 @@ namespace nk_lab_1
             {
                 System.Windows.Forms.MessageBox.Show("Can't recognize");
             }
-            
         }
-        public bool Teach(List<int[]>inputs, List<int[]> outStandart, ref System.Windows.Forms.ProgressBar progBar, ref System.Diagnostics.Stopwatch teachTime)
+        public bool Teach(List<int[]>inputs, List<int[]> outStandart, ref System.Windows.Forms.ProgressBar progBar)
         {
             progBar.Maximum++;
             progBar.PerformStep();
-            teachTime.Start();
             epoch++;
             for (int i = 0; i < inputs.Count; i++)
             {
                 if (!ArrayEqual(CheckStandart(inputs[i]), outStandart[i]))
                 {
-                    teachTime.Stop();
-                    WriteToLog(inputs[i], "let", i);
                     InitInput(inputs[i]);
-                    teachTime.Start();
                     InitOut(outStandart[i]);
-                    teachTime.Stop();
-                    CorrectWeight(ref teachTime);
-                    teachTime.Start();
+                    
+                    CorrectWeight();
                     for (int j = 0; j < inputs.Count; j++)
                     {
                         
@@ -224,10 +209,9 @@ namespace nk_lab_1
                             if (epoch < Constants.MaxEpoch)
                             {
                                 succTeach = true;
-                                teachTime.Stop();
                                 WriteToLog(CheckStandart(inputs[j]), "result  ", j);
                                 WriteToLog(outStandart[j], "standard", j);
-                                Teach(inputs, outStandart, ref progBar, ref teachTime);
+                                Teach(inputs, outStandart, ref progBar);
                             }
                             else
                             {
@@ -237,7 +221,6 @@ namespace nk_lab_1
                     }
                 }
             }
-            teachTime.Stop();
             return succTeach;
         }
         public void WriteToLog(int[] arr, string arrayName, int curIter)
@@ -320,7 +303,6 @@ namespace nk_lab_1
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
             this.showCheck = new System.Windows.Forms.Button();
-            this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
@@ -346,8 +328,8 @@ namespace nk_lab_1
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 
-            this.threeNeuronInit = new System.Windows.Forms.RadioButton();
-            this.fiveNeuronInit = new System.Windows.Forms.RadioButton();
+            this.twoNeuronInit = new System.Windows.Forms.RadioButton();
+            this.fourNeuronInit = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.maxEpochCountInit = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -398,16 +380,6 @@ namespace nk_lab_1
             this.showCheck.Text = "Create";
             this.showCheck.UseVisualStyleBackColor = true;
             this.showCheck.Click += new System.EventHandler(this.showCheck_Click);
-            // 
-            // test
-            // 
-            this.test.Location = new System.Drawing.Point(385, 1);
-            this.test.Name = "test";
-            this.test.Size = new System.Drawing.Size(75, 23);
-            this.test.TabIndex = 6;
-            this.test.Text = "Test";
-            this.test.UseVisualStyleBackColor = true;
-            this.test.Click += new System.EventHandler(this.test_Click);
             //
             // teach
             //
@@ -471,27 +443,27 @@ namespace nk_lab_1
 
             
             // 
-            // threeNeuronInit
+            // twoNeuronInit
             // 
-            this.threeNeuronInit.AutoSize = true;
-            this.threeNeuronInit.Location = new System.Drawing.Point(176, 26);
-            this.threeNeuronInit.Name = "threeNeuronInit";
-            this.threeNeuronInit.Size = new System.Drawing.Size(31, 17);
-            this.threeNeuronInit.TabIndex = 0;
-            this.threeNeuronInit.TabStop = true;
-            this.threeNeuronInit.Text = "3";
-            this.threeNeuronInit.UseVisualStyleBackColor = true;
+            this.twoNeuronInit.AutoSize = true;
+            this.twoNeuronInit.Location = new System.Drawing.Point(176, 26);
+            this.twoNeuronInit.Name = "twoNeuronInit";
+            this.twoNeuronInit.Size = new System.Drawing.Size(31, 17);
+            this.twoNeuronInit.TabIndex = 0;
+            this.twoNeuronInit.TabStop = true;
+            this.twoNeuronInit.Text = "2";
+            this.twoNeuronInit.UseVisualStyleBackColor = true;
             // 
-            // fiveNeuronInit
+            // fourNeuronInit
             // 
-            this.fiveNeuronInit.AutoSize = true;
-            this.fiveNeuronInit.Location = new System.Drawing.Point(213, 26);
-            this.fiveNeuronInit.Name = "fiveNeuronInit";
-            this.fiveNeuronInit.Size = new System.Drawing.Size(31, 17);
-            this.fiveNeuronInit.TabIndex = 1;
-            this.fiveNeuronInit.TabStop = true;
-            this.fiveNeuronInit.Text = "5";
-            this.fiveNeuronInit.UseVisualStyleBackColor = true;
+            this.fourNeuronInit.AutoSize = true;
+            this.fourNeuronInit.Location = new System.Drawing.Point(213, 26);
+            this.fourNeuronInit.Name = "fourNeuronInit";
+            this.fourNeuronInit.Size = new System.Drawing.Size(31, 17);
+            this.fourNeuronInit.TabIndex = 1;
+            this.fourNeuronInit.TabStop = true;
+            this.fourNeuronInit.Text = "4";
+            this.fourNeuronInit.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -523,6 +495,7 @@ namespace nk_lab_1
             for (int i = 0; i < signs.Length; i++)
             {
                 this.signs[i].AutoSize = true;
+                //this.signs[i].BackColor = System.Drawing.Color.Cyan;
                 this.signs[i].Location = new System.Drawing.Point(0, 0);
                 this.signs[i].Name = "signs" + i.ToString();
                 this.signs[i].Size = new System.Drawing.Size(35, 13);
@@ -567,7 +540,6 @@ namespace nk_lab_1
             this.ClientSize = new System.Drawing.Size(659, 438);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.showCheck);
-            this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
             this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
@@ -580,8 +552,8 @@ namespace nk_lab_1
             this.Controls.Add(this.label2);
             this.Controls.Add(this.maxEpochCountInit);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.fiveNeuronInit);
-            this.Controls.Add(this.threeNeuronInit);
+            this.Controls.Add(this.fourNeuronInit);
+            this.Controls.Add(this.twoNeuronInit);
 
 
             for (int i = 0; i < Constants.maxInputCount; i++)
@@ -616,9 +588,8 @@ namespace nk_lab_1
                 for (int j = 0; j < letters.Count; j++)
                 {
                     letters[j][i].Location = new System.Drawing.Point(5,5);
-                    standart[i].Location = new System.Drawing.Point(5, 5);
                     letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
-                    standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standart[i].Location = new System.Drawing.Point(5, 5);
                 }
             }
             for (int i = 0; i < signs.Length; i++)
@@ -669,15 +640,14 @@ namespace nk_lab_1
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.Button showCheck;
-        protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
         private System.Windows.Forms.PictureBox pictureBox1;
 
 
-        protected System.Windows.Forms.RadioButton threeNeuronInit;
-        protected System.Windows.Forms.RadioButton fiveNeuronInit;
+        protected System.Windows.Forms.RadioButton twoNeuronInit;
+        protected System.Windows.Forms.RadioButton fourNeuronInit;
         private System.Windows.Forms.Label label1;
         protected System.Windows.Forms.TextBox maxEpochCountInit;
         private System.Windows.Forms.Label label2;

@@ -16,12 +16,14 @@ namespace nk_lab_3
         private int inputSize;
         decimal k;
         HebbNet hebbNet;
+        private bool teached = false;
         public Form1()
         {
             InitializeComponent();
         }
         private void showCheck_Click(object sender, EventArgs e)
         {
+            teached = false;
             if (heightValue.Text != "" && widthValue.Text != "" && coeficientValue.Text != "" /*&& stepValue.Text != ""*/)
             {
                 int letterHeight = Convert.ToInt32(heightValue.Text);
@@ -38,8 +40,51 @@ namespace nk_lab_3
                 System.Windows.Forms.MessageBox.Show("Fill all fields");
             }
         }
+        private void test_Click(object sender, EventArgs e)
+        {
+            
+            coeficientValue.Text = "0.001";
+            teached = false;
+            int letterHeight = 14;
+            int letterWidth = 10;
+            MakeLetters(letterHeight, letterWidth);
+            File.WriteAllText("log.txt", "");
+            int[] letter1 = { -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter2 = { -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter3 = { -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1 };
+            int[] letter4 = { -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1 };
+            int[] letter5 = { -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1 };
+            List<int[]> vectors = new List<int[]>();
+            vectors.Add(letter1);
+            vectors.Add(letter2);
+            vectors.Add(letter3);
+            vectors.Add(letter4);
+            vectors.Add(letter5);
+            //vectors.Add(letter6);
+            for (int j = 0; j < letters.Count; j++)
+            {
+                for (int i = 0; i < vectors[j].Length; i++)
+                {
+                    if (vectors[j][i] == 1)
+                    {
+                        letters[j][i].CheckState = System.Windows.Forms.CheckState.Indeterminate;
+                    }
+                    else
+                    {
+                        letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    }
+                }
+            }
+            k = Convert.ToDecimal(coeficientValue.Text);
+            inputSize = letterHeight * letterWidth;
+
+            
+            File.WriteAllText("log.txt", "");
+        }
         private void teach_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Stopwatch teachTime = new System.Diagnostics.Stopwatch();
+            teached = true;
             File.WriteAllText("log.txt", "");
             List<int[]> standartLetters = new List<int[]>();
             for (int i = 0; i < Constants.lettersCount; i++)
@@ -56,30 +101,39 @@ namespace nk_lab_3
             }
             hebbNet = new HebbNet(standartLetters.Count, inputSize, k);
             hebbNet.WriteToLogString("===============INITIALIZATION===============");
-            hebbNet.InitNet(standartLetters);
-            MessageBox.Show("Initialisation successful");
+            hebbNet.InitNet(standartLetters, ref teachTime);
+            //MessageBox.Show("Initialisation successful. Init. time: " + teachTime.ElapsedTicks.ToString() + "  " + System.Diagnostics.Stopwatch.Frequency);
+            MessageBox.Show("Initialisation successful. Init. time: " + String.Format("{0:0.0000}",((decimal)teachTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + " mS");
             MessageBox.Show("View 'log.txt' for more information");
         }
         private void recognize_Click(object sender, EventArgs e)
         {
-            
-            int[] inLetter = new int[count];
-            for (int j = 0; j < inLetter.Length; j++)
+            System.Diagnostics.Stopwatch recTime = new System.Diagnostics.Stopwatch();
+            if (teached)
             {
+                int[] inLetter = new int[count];
+                for (int j = 0; j < inLetter.Length; j++)
+                {
 
-                if (standart[j].CheckState == System.Windows.Forms.CheckState.Indeterminate || standart[j].CheckState == System.Windows.Forms.CheckState.Checked)
-                    inLetter[j] = 1;
+                    if (standart[j].CheckState == System.Windows.Forms.CheckState.Indeterminate || standart[j].CheckState == System.Windows.Forms.CheckState.Checked)
+                        inLetter[j] = 1;
+                    else
+                        inLetter[j] = -1;
+
+                }
+                int sgnNum = hebbNet.Recognize(inLetter, ref recTime);
+                epsilonValue.Text = String.Format("{0:0.000}", hebbNet.GetEpsilon());
+                if (sgnNum != -1)
+                    //MessageBox.Show("Sign №" + (sgnNum + 1).ToString() + ". Recognize time: " + recTime.ElapsedTicks.ToString() + "  " + System.Diagnostics.Stopwatch.Frequency);
+                    MessageBox.Show("Sign №" + (sgnNum + 1).ToString() + ". Recognize time: " + String.Format("{0:0.0000}",((decimal)recTime.ElapsedTicks * 1000 / System.Diagnostics.Stopwatch.Frequency)) + " mS");
                 else
-                    inLetter[j] = -1;
-
+                    MessageBox.Show("Can't recognize");
+                MessageBox.Show("View 'log.txt' for more information");
             }
-            int sgnNum = hebbNet.Recognize(inLetter);
-            epsilonValue.Text = String.Format("{0:0.000}", hebbNet.GetEpsilon());
-            if (sgnNum != -1)
-                MessageBox.Show("Sign №" + (sgnNum + 1).ToString());
             else
-                MessageBox.Show("Can't recognize");
-            MessageBox.Show("View 'log.txt' for more information");
+            {
+                MessageBox.Show("!!Press 'Initialize net' first!!");
+            }
            
         }
         private void about_Click(object sender, EventArgs e)

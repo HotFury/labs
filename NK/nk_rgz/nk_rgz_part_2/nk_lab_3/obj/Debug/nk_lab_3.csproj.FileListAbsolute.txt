@@ -7,9 +7,12 @@ D:\Study\5_course\II_semestr\labs\NK\nk_lab_3\nk_lab_3\obj\Debug\nk_lab_3.Proper
 D:\Study\5_course\II_semestr\labs\NK\nk_lab_3\nk_lab_3\obj\Debug\nk_lab_3.csproj.GenerateResource.Cache
 D:\Study\5_course\II_semestr\labs\NK\nk_lab_3\nk_lab_3\obj\Debug\nk_lab_3.exe
 D:\Study\5_course\II_semestr\labs\NK\nk_lab_3\nk_lab_3\obj\Debug\nk_lab_3.pdb
-D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_lab_3\nk_lab_3\bin\Debug\nk_lab_3.exe.config
-D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_lab_3\nk_lab_3\obj\Debug\nk_lab_3.exe
-D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_lab_3\nk_lab_3\obj\Debug\nk_lab_3.pdb
 D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\bin\Debug\nk_lab_3.exe.config
 D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\obj\Debug\nk_lab_3.exe
 D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\obj\Debug\nk_lab_3.pdb
+D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\bin\Debug\nk_lab_3.exe
+D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\bin\Debug\nk_lab_3.pdb
+D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\obj\Debug\nk_lab_3.csprojResolveAssemblyReference.cache
+D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\obj\Debug\nk_lab_3.Form1.resources
+D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\obj\Debug\nk_lab_3.Properties.Resources.resources
+D:\Study\5_course\II_semestr\labs\NK\nk_rgz\nk_rgz_part_2\nk_lab_3\obj\Debug\nk_lab_3.csproj.GenerateResource.Cache

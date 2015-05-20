@@ -17,6 +17,7 @@ namespace nk_lab_5
         int maxLength;
         List<List<double>> weightsInit = new List<List<double>>();
         Random rand = new Random();
+        //private bool teached = false;
         public Form1()
         {
             InitializeComponent();
@@ -32,6 +33,10 @@ namespace nk_lab_5
         }
         private void teach_Click(object sender, EventArgs e)
         {
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
+            //teached = true;
             if (firstName.Text != "" && middleName.Text != "" && surName.Text != "" && alphaValue.Text != "" && rValue.Text != "" && kValue.Text != "")
             {
                 string firstNameVal = firstName.Text;
@@ -112,7 +117,7 @@ namespace nk_lab_5
                     weightsInit.Add(curW);
                 }
                 kohNet.InitAxons(weightsInit);
-                if (kohNet.Teach(vectors))
+                if (kohNet.Teach(vectors, ref loading))
                 {
                     MessageBox.Show("Create successful by " + kohNet.Iteration.ToString() + " iterations. View 'log.txt' for more information");
                 }

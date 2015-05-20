@@ -6,7 +6,7 @@ using System.Windows.Forms;
 public static class Constants
 {
     public const int lettersCount = 5;
-    public const int maxInputCount = 100;
+    public const int maxInputCount = 150;
     
 }
 namespace nk_lab_3
@@ -43,6 +43,27 @@ namespace nk_lab_3
             write_text.Close(); // Закрываем файл
         }
         public void WriteToLog(decimal[] arr, string row, int num)
+        {
+            StreamWriter write_text;  //Класс для записи в файл
+            FileInfo file = new FileInfo("log.txt");
+            write_text = file.AppendText(); //Дописываем инфу в файл, если файла не существует он создастся
+            /*string inString = ArrayToString(arr, "|");
+            string[] values = inString.Split('|');*/
+            string outString = String.Format("{0,5:0.###}", row + num.ToString()) + "|";
+            string bound = "-----|";
+            string bounder = "=====|";
+            foreach (decimal val in arr)
+            {
+                bounder += bound;
+                outString += String.Format("{0,5:0.###}", val) + "|";
+            }
+
+            write_text.WriteLine(outString); //Записываем в файл текст из текстового поля
+            write_text.WriteLine(bounder);
+            //write_text.WriteLine("==========");
+            write_text.Close(); // Закрываем файл
+        }
+        public void WriteToLog(int[] arr, string row, int num)
         {
             StreamWriter write_text;  //Класс для записи в файл
             FileInfo file = new FileInfo("log.txt");
@@ -386,6 +407,7 @@ namespace nk_lab_3
         }
         public void InitInput(int[] letter)
         {
+            //WriteToLog(letter, "let", 0);
             for (int i = 0; i < sensor.Length; i++)
             {
                 sensor[i] = new Sensor(letter[i]);
@@ -395,19 +417,24 @@ namespace nk_lab_3
                 z_neuron[i].InitInput(sensor);
             }
         }
-        public void InitNet(List<int[]> letters)
+        public void InitNet(List<int[]> letters, ref System.Diagnostics.Stopwatch teachTime)
         {
             WriteToLogHead(z_neuron[0].Weight, "S", 5);
+            teachTime.Start();
             for (int i = 0; i < letters.Count; i++)
             {
                 InitInput(letters[i]);
                 z_neuron[i].InitWeight(sensor);
+                teachTime.Stop();
                 WriteToLog(z_neuron[i].Weight, "Z", i);
+                teachTime.Start();
             }
+            teachTime.Stop();
         }
 
-        public int Recognize(int[] letter)
+        public int Recognize(int[] letter, ref System.Diagnostics.Stopwatch recTime)
         {
+            recTime.Start();
             int res = -1;
             List<decimal> temp = new List<decimal>();
             InitInput(letter);
@@ -415,8 +442,10 @@ namespace nk_lab_3
             {
                 z_neuron[i].CalculateOut();
             }
+            recTime.Stop();
             WriteToLogString("=========MaxNet input values=========");
             WriteToLog(z_neuron, "Zout", -1);
+            recTime.Start();
             maxNet = new MaxNet(z_neuron);
             
             for (int i = 0; i < z_neuron.Length; i++ )
@@ -426,8 +455,10 @@ namespace nk_lab_3
             temp.Sort();
             if (temp[temp.Count - 1] != temp[temp.Count - 2])
             {
+                recTime.Stop();
                 WriteToLogString("==============MaxNet Working==============");
                 WriteToLogHead(maxNet.Output, "A", 5);
+                recTime.Start();
                 maxNet.CalculateOut();
                 for (int i = 0; i < y_neuron.Length; i++)
                 {
@@ -446,6 +477,7 @@ namespace nk_lab_3
             {
                 WriteToLogString("==============MaxNet not worked, because there are 2 or more maximum equal input==============");
             }
+            recTime.Stop();
             return res;
         }
         public decimal GetEpsilon()
@@ -499,10 +531,11 @@ namespace nk_lab_3
             this.coeficient = new System.Windows.Forms.Label();
             this.coeficientValue = new System.Windows.Forms.TextBox();
             this.showCheck = new System.Windows.Forms.Button();
+            this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
-            this.showCheck = new System.Windows.Forms.Button();
+            //this.showCheck = new System.Windows.Forms.Button();
             this.signs = new System.Windows.Forms.Label[Constants.lettersCount];
             this.toRecSign = new System.Windows.Forms.Label();
             for (int i = 0; i < Constants.lettersCount; i++)
@@ -633,6 +666,17 @@ namespace nk_lab_3
             this.showCheck.Text = "Create net";
             this.showCheck.UseVisualStyleBackColor = true;
             this.showCheck.Click += new System.EventHandler(this.showCheck_Click);
+
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(450, 5);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(75, 70);
+            this.test.TabIndex = 6;
+            this.test.Text = "Test";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
             //
             // teach
             //
@@ -702,6 +746,7 @@ namespace nk_lab_3
             this.Controls.Add(this.pictureBox1);
 
             this.Controls.Add(this.showCheck);
+            this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
             this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
@@ -747,6 +792,8 @@ namespace nk_lab_3
                 {
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
                     standart[i].Location = new System.Drawing.Point(5, 5);
+                    letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
                 }
             }
             for (int i = 0; i < signs.Length; i++)
@@ -797,11 +844,11 @@ namespace nk_lab_3
         protected System.Windows.Forms.Label coeficient;
         protected System.Windows.Forms.TextBox heightValue;
         protected System.Windows.Forms.TextBox widthValue;
-        //protected System.Windows.Forms.TextBox stepValue;
         protected System.Windows.Forms.TextBox coeficientValue;
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.Button showCheck;
+        protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;

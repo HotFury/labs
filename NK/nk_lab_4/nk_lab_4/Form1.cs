@@ -31,6 +31,7 @@ namespace nk_lab_4
         }
         private void showCheck_Click(object sender, EventArgs e)
         {
+            loading.Value = 0;
             if (heightValue.Text != "" && widthValue.Text != "")
             {
                 int letterHeight = Convert.ToInt32(heightValue.Text);
@@ -49,6 +50,7 @@ namespace nk_lab_4
         }
         private void test_Click(object sender, EventArgs e)
         {
+            loading.Value = 0;
             teached = false;
             int letterHeight = 14;
             int letterWidth = 10;
@@ -80,6 +82,9 @@ namespace nk_lab_4
         }
         private void teach_Click(object sender, EventArgs e)
         {
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
             teached = true;
             File.WriteAllText("log.txt", "");
             List<int[]> standartLetters = new List<int[]>();
@@ -96,7 +101,7 @@ namespace nk_lab_4
                 standartLetters.Add(letter);
             }
             hopfieldNet = new HopfieldNet(inputSize, Constants.lettersCount);
-            hopfieldNet.InitNet(standartLetters);
+            hopfieldNet.InitNet(standartLetters, ref loading);
             Log log = new Log();
             foreach (int[] curLet in standartLetters)
                 log.WriteToLog(curLet, "x", 0);
@@ -104,6 +109,9 @@ namespace nk_lab_4
         }
         private void recognize_Click(object sender, EventArgs e)
         {
+            loading.Value = 0;
+            loading.Maximum = 1;
+            loading.Step = 2;
             if (teached)
             {
                 hopfieldNet.ReserIterations_LettersHistory();
@@ -133,7 +141,8 @@ namespace nk_lab_4
                 {
                     standartRecognized[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
                 }
-                hopfieldNet.Recognize();
+                hopfieldNet.Recognize(ref loading);
+                MessageBox.Show("Calculation complete. Now look visual");
                 makeVisDel = new MakeVisualDel(MakeVisual);
                 t1 = new Thread(StartAnim); // создаем поток  
                 t1.IsBackground = true; // задаем фоновый режым  

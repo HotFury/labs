@@ -5,7 +5,7 @@ using System;
 public static class Constants
 {
     public const int lettersCount = 4;
-    public const int maxInputCount = 30;
+    public const int maxInputCount = 150;
     private static int neuronCount;
     private static int maxEpoch;
     public static int MaxEpoch
@@ -53,10 +53,6 @@ public static class Constants
             outStandart.Add(outSt3four);
             outStandart.Add(outSt4four);
         }
-        /*outStandart.Add(outSt1);
-        outStandart.Add(outSt2);
-        outStandart.Add(outSt3);
-        outStandart.Add(outSt4);*/
     }
                                                
 }
@@ -192,13 +188,16 @@ namespace nk_lab_1
                 System.Windows.Forms.MessageBox.Show("Can't recognize");
             }
         }
-        public bool Teach(List<int[]>inputs, List<int[]> outStandart)
+        public bool Teach(List<int[]>inputs, List<int[]> outStandart, ref System.Windows.Forms.ProgressBar progBar)
         {
+            progBar.Maximum++;
+            progBar.PerformStep();
             epoch++;
             for (int i = 0; i < inputs.Count; i++)
             {
                 if (!ArrayEqual(CheckStandart(inputs[i]), outStandart[i]))
                 {
+                    //WriteToLog(inputs[i], "let", i);
                     InitInput(inputs[i]);
                     InitOut(outStandart[i]);
                     
@@ -213,7 +212,7 @@ namespace nk_lab_1
                                 succTeach = true;
                                 WriteToLog(CheckStandart(inputs[j]), "result  ", j);
                                 WriteToLog(outStandart[j], "standard", j);
-                                Teach(inputs, outStandart);
+                                Teach(inputs, outStandart, ref progBar);
                             }
                             else
                             {
@@ -305,6 +304,7 @@ namespace nk_lab_1
             this.width = new System.Windows.Forms.Label();
             this.widthValue = new System.Windows.Forms.TextBox();
             this.showCheck = new System.Windows.Forms.Button();
+            this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
@@ -335,6 +335,9 @@ namespace nk_lab_1
             this.label1 = new System.Windows.Forms.Label();
             this.maxEpochCountInit = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.loading = new System.Windows.Forms.ProgressBar();
+            this.loadLabel = new System.Windows.Forms.Label();
+
 
             this.SuspendLayout();
             // 
@@ -379,6 +382,16 @@ namespace nk_lab_1
             this.showCheck.Text = "Create";
             this.showCheck.UseVisualStyleBackColor = true;
             this.showCheck.Click += new System.EventHandler(this.showCheck_Click);
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(385, 1);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(75, 23);
+            this.test.TabIndex = 6;
+            this.test.Text = "Test";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
             //
             // teach
             //
@@ -494,7 +507,6 @@ namespace nk_lab_1
             for (int i = 0; i < signs.Length; i++)
             {
                 this.signs[i].AutoSize = true;
-                //this.signs[i].BackColor = System.Drawing.Color.Cyan;
                 this.signs[i].Location = new System.Drawing.Point(0, 0);
                 this.signs[i].Name = "signs" + i.ToString();
                 this.signs[i].Size = new System.Drawing.Size(35, 13);
@@ -510,7 +522,25 @@ namespace nk_lab_1
             this.toRecSign.Size = new System.Drawing.Size(32, 13);
             this.toRecSign.TabIndex = 5;
             this.toRecSign.Text = "for rcognize";
+            // 
+            // loading
+            // 
+            this.loading.Location = new System.Drawing.Point(125, 70);
+            this.loading.Name = "loading";
+            this.loading.Size = new System.Drawing.Size(333, 23);
+            this.loading.TabIndex = 0;
+            this.loading.Visible = false;
 
+            //
+            //loadLabel
+            //
+            this.loadLabel.AutoSize = true;
+            this.loadLabel.Location = new System.Drawing.Point(125, 55);
+            this.loadLabel.Name = "loadLabel";
+            this.loadLabel.Size = new System.Drawing.Size(32, 13);
+            this.loadLabel.TabIndex = 5;
+            this.loadLabel.Visible = false;
+            this.loadLabel.Text = "Progress:";
 
 
             // 
@@ -521,6 +551,7 @@ namespace nk_lab_1
             this.ClientSize = new System.Drawing.Size(659, 438);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.showCheck);
+            this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
             this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
@@ -550,6 +581,8 @@ namespace nk_lab_1
                 this.Controls.Add(this.signs[i]);
             }
             this.Controls.Add(this.toRecSign);
+            this.Controls.Add(this.loading);
+            this.Controls.Add(this.loadLabel);
             this.Name = "Form1";
             this.Text = "Hebb network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -560,12 +593,16 @@ namespace nk_lab_1
 
         protected void MakeLetters(int letterHeight, int letterWidth)
         {
+            this.loading.Visible = true;
+            this.loadLabel.Visible = true;
             for (int i = 0; i < Constants.maxInputCount; i++ )
             {
                 for (int j = 0; j < letters.Count; j++)
                 {
                     letters[j][i].Location = new System.Drawing.Point(5,5);
                     standart[i].Location = new System.Drawing.Point(5, 5);
+                    letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
                 }
             }
             for (int i = 0; i < signs.Length; i++)
@@ -578,7 +615,7 @@ namespace nk_lab_1
             this.recognize.Location = new System.Drawing.Point(10, 100);
             int width = letterWidth;
             count  = letterHeight * letterWidth;
-            int y = 50;
+            int y = 100;
             int xConst = 110;
             int x = xConst;
             int step = 15;
@@ -616,6 +653,7 @@ namespace nk_lab_1
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.Button showCheck;
+        protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
@@ -631,7 +669,8 @@ namespace nk_lab_1
 
         protected System.Windows.Forms.Label[] signs;
         protected System.Windows.Forms.Label toRecSign;
-        
+        private System.Windows.Forms.ProgressBar loading;
+        protected System.Windows.Forms.Label loadLabel;
         protected int count;
 
     }

@@ -195,8 +195,10 @@ namespace nk_lab_5
             }
             return true;
         }
-        public bool Teach(List<List<int>> vectors)
+        public bool Teach(List<List<int>> vectors, ref System.Windows.Forms.ProgressBar progBar)
         {
+            progBar.Maximum++;
+            progBar.PerformStep();
             iterations++;
             foreach (List<int> curVector in vectors)
             {
@@ -215,7 +217,7 @@ namespace nk_lab_5
             }
             if (!Stop())
             {
-                Teach(vectors);
+                Teach(vectors, ref progBar);
             }
             return true;
         }
@@ -439,6 +441,8 @@ namespace nk_lab_5
             this.about = new System.Windows.Forms.Button();
             this.kValue = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.loading = new System.Windows.Forms.ProgressBar();
+            this.loadLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -565,7 +569,6 @@ namespace nk_lab_5
             this.recognize.TabIndex = 14;
             this.recognize.Text = "Recognize";
             this.recognize.UseVisualStyleBackColor = true;
-            //this.recognize.Click += new System.EventHandler(this.recognize_Click);
             // 
             // about
             // 
@@ -593,6 +596,24 @@ namespace nk_lab_5
             this.label5.TabIndex = 16;
             this.label5.Text = "k = ";
             // 
+            // loading
+            // 
+            this.loading.Location = new System.Drawing.Point(12, 145);
+            this.loading.Name = "loading";
+            this.loading.Size = new System.Drawing.Size(333, 23);
+            this.loading.TabIndex = 0;
+            //this.loading.Visible = false;
+            // 
+            // loadLabel
+            // 
+            this.loadLabel.AutoSize = true;
+            this.loadLabel.Location = new System.Drawing.Point(12, 130);
+            this.loadLabel.Name = "loadLabel";
+            this.loadLabel.Size = new System.Drawing.Size(51, 13);
+            this.loadLabel.TabIndex = 5;
+            this.loadLabel.Text = "Progress:";
+            //this.loadLabel.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -601,10 +622,7 @@ namespace nk_lab_5
             this.Controls.Add(this.kValue);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.about);
-            //this.Controls.Add(this.recognize);
             this.Controls.Add(this.teach);
-            //this.Controls.Add(this.textBox1);
-            //this.Controls.Add(this.label4);
             this.Controls.Add(this.rValue);
             this.Controls.Add(this.alphaValue);
             this.Controls.Add(this.Rlabel);
@@ -616,6 +634,8 @@ namespace nk_lab_5
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.loading);
+            this.Controls.Add(this.loadLabel);
             this.Name = "Form1";
             this.Text = "Kohonen network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -644,6 +664,8 @@ namespace nk_lab_5
         private System.Windows.Forms.Button about;
         private TextBox kValue;
         private Label label5;
+        private System.Windows.Forms.ProgressBar loading;
+        protected System.Windows.Forms.Label loadLabel;
     }
 }
 

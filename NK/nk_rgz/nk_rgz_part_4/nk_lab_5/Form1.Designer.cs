@@ -8,10 +8,10 @@ namespace nk_lab_5
     public static class Constants
     {
         public const int lettersCount = 5;
-        public const int maxInputCount = 100;
+        public const int maxInputCount = 150;
         public static int axonCount = lettersCount;
         public static int sensorCount;
-        public static decimal lim = 0.05m;
+        public static decimal lim = 0.0m;
 
     }
     partial class Sensor
@@ -73,13 +73,12 @@ namespace nk_lab_5
             weight = new decimal[sensorCount];
             oldWeight = new decimal[sensorCount];
         }
-        public void InitWeight(List<decimal> weightsInit)
+        public void InitWeight(List<int> inp)
         {
-            Random rand = new Random();
             for (int i = 0; i < weight.Length; i++)
             {
-                weight[i] = weightsInit[i];
-                oldWeight[i] = weight[i]; 
+                weight[i] = inp[i];
+                oldWeight[i] = weight[i];
             }
         }
     }
@@ -119,18 +118,23 @@ namespace nk_lab_5
                 sensor[i] = new Sensor(vector[i]);
             }
         }
-        public void InitAxons(List<List<decimal>> weightsInit)
+        public void InitAxons(List<List<int>> inp, ref System.Diagnostics.Stopwatch teachTime)
         {
             WriteToLogString(" ========== WEIGHTS ========== ");
             WriteToLogHead(axon[0].Weight, "w", 5);
+            teachTime.Start();
             for(int i = 0; i < axon.Length; i++)
             {
-                axon[i].InitWeight(weightsInit[i]);
+                axon[i].InitWeight(inp[i]);
+                teachTime.Stop();
                 WriteToLog(axon[i].Weight, "A", i);
+                teachTime.Start();
             }
+            teachTime.Stop();
         }
-        public void CalculateDistance()
+        public void CalculateDistance(ref System.Diagnostics.Stopwatch recTime)
         {
+            recTime.Start();
             for (int i = 0; i < axon.Length; i++)
             {
                 axon[i].Distance = 0;
@@ -139,6 +143,7 @@ namespace nk_lab_5
                     axon[i].Distance += (axon[i].Weight[j] - sensor[j].Input) * (axon[i].Weight[j] - sensor[j].Input);
                 }
             }
+            recTime.Stop();
             WriteToLog(axon, "Dist", -1, "distance");
         }
         public int GetWinnerAxon()
@@ -173,10 +178,10 @@ namespace nk_lab_5
                 }
             }
         }
-        public int Recognize(List<int> vector)
+        public int Recognize(List<int> vector, ref System.Diagnostics.Stopwatch recTime)
         {
             InitSensors(vector);
-            CalculateDistance();
+            CalculateDistance(ref recTime);
             return GetWinnerAxon();
         }
         public bool Stop()
@@ -193,18 +198,23 @@ namespace nk_lab_5
             }
             return true;
         }
-        public bool Teach(List<List<int>> vectors)
+        public bool Teach(List<List<int>> vectors, ref System.Windows.Forms.ProgressBar progBar, ref System.Diagnostics.Stopwatch teachTime)
         {
+            progBar.Maximum++;
+            progBar.PerformStep();
+            teachTime.Start();
             iterations++;
             foreach (List<int> curVector in vectors)
             {
-                int axonNum = Recognize(curVector);
+                int axonNum = Recognize(curVector, ref teachTime);
                 CorrectWeights(axonNum);
+                teachTime.Stop();
                 WriteToLogHead(axon[0].Weight, "w", 5);
                 for (int i = 0; i < axon.Length; i++)
                 {
                     WriteToLog(axon[i].Weight, "A", i);
                 }
+                teachTime.Start();
             }
             alpha = alpha * coefficient;
             if (radius > 0)
@@ -213,7 +223,7 @@ namespace nk_lab_5
             }
             if (!Stop())
             {
-                Teach(vectors);
+                Teach(vectors, ref progBar, ref teachTime);
             }
             return true;
         }
@@ -433,6 +443,7 @@ namespace nk_lab_5
             this.alpha = new System.Windows.Forms.Label();
             this.alphaValue = new System.Windows.Forms.TextBox();
             this.showCheck = new System.Windows.Forms.Button();
+            this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
             this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
@@ -454,7 +465,8 @@ namespace nk_lab_5
             {
                 this.standart[i] = new System.Windows.Forms.CheckBox();
             }
-
+            this.loading = new System.Windows.Forms.ProgressBar();
+            this.loadLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 
@@ -552,6 +564,16 @@ namespace nk_lab_5
             this.showCheck.Text = "Create network";
             this.showCheck.UseVisualStyleBackColor = true;
             this.showCheck.Click += new System.EventHandler(this.showCheck_Click);
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(450, 5);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(75, 70);
+            this.test.TabIndex = 7;
+            this.test.Text = "Test";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
             //
             // teach
             //
@@ -601,7 +623,25 @@ namespace nk_lab_5
                 this.standart[i].ThreeState = true;
                 this.standart[i].UseVisualStyleBackColor = true;
             }
+            // 
+            // loading
+            // 
+            this.loading.Location = new System.Drawing.Point(125, 100);
+            this.loading.Name = "loading";
+            this.loading.Size = new System.Drawing.Size(333, 23);
+            this.loading.TabIndex = 0;
+            this.loading.Visible = false;
 
+            //
+            //loadLabel
+            //
+            this.loadLabel.AutoSize = true;
+            this.loadLabel.Location = new System.Drawing.Point(125, 85);
+            this.loadLabel.Name = "loadLabel";
+            this.loadLabel.Size = new System.Drawing.Size(32, 13);
+            this.loadLabel.TabIndex = 5;
+            this.loadLabel.Visible = false;
+            this.loadLabel.Text = "Progress:";
             // 
             // pictureBox1
             // 
@@ -650,6 +690,7 @@ namespace nk_lab_5
             this.Controls.Add(this.pictureBox1);
 
             this.Controls.Add(this.showCheck);
+            this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
             this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
@@ -677,7 +718,8 @@ namespace nk_lab_5
                 this.Controls.Add(this.signs[i]);
             }
             this.Controls.Add(this.toRecSign);
-
+            this.Controls.Add(this.loading);
+            this.Controls.Add(this.loadLabel);
             this.Name = "Form1";
             this.Text = "Kohonen network";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -689,6 +731,8 @@ namespace nk_lab_5
         }
         protected void MakeLetters(int letterHeight, int letterWidth)
         {
+            this.loading.Visible = true;
+            this.loadLabel.Visible = true;
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 for (int j = 0; j < letters.Count; j++)
@@ -702,7 +746,7 @@ namespace nk_lab_5
             this.recognize.Location = new System.Drawing.Point(10, 100);
             int width = letterWidth;
             count = letterHeight * letterWidth;
-            int y = 80;
+            int y = 130;
             int xConst = 110;
             int x = xConst;
             int step = 15;
@@ -747,12 +791,15 @@ namespace nk_lab_5
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
         protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.Button showCheck;
+        protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
         protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
 
         protected System.Windows.Forms.Label[] signs;
         protected System.Windows.Forms.Label toRecSign;
+        private System.Windows.Forms.ProgressBar loading;
+        protected System.Windows.Forms.Label loadLabel;
 
 
         protected int count;
