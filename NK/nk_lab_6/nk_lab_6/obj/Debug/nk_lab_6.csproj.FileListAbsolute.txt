@@ -1,0 +1,9 @@
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\bin\Debug\nk_lab_6.exe.config
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\obj\Debug\nk_lab_6.csprojResolveAssemblyReference.cache
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\obj\Debug\nk_lab_6.Form1.resources
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\obj\Debug\nk_lab_6.Properties.Resources.resources
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\obj\Debug\nk_lab_6.csproj.GenerateResource.Cache
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\bin\Debug\nk_lab_6.exe
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\bin\Debug\nk_lab_6.pdb
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\obj\Debug\nk_lab_6.exe
+D:\Study\5_course\II_semestr\labs\NK\nk_lab_6\nk_lab_6\obj\Debug\nk_lab_6.pdb
