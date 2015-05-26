@@ -1,0 +1,12 @@
+D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\2 С#\PPKK_Lab10\PPKK_Lab10\bin\Debug\Properties\AssemblyInfo.cs
+D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\2 С#\PPKK_Lab10\PPKK_Lab10\bin\Debug\PPKK_Lab10.exe
+D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\2 С#\PPKK_Lab10\PPKK_Lab10\bin\Debug\PPKK_Lab10.pdb
+D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\2 С#\PPKK_Lab10\PPKK_Lab10\obj\Debug\PPKK_Lab10.csprojResolveAssemblyReference.cache
+D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\2 С#\PPKK_Lab10\PPKK_Lab10\obj\Debug\PPKK_Lab10.exe
+D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\2 С#\PPKK_Lab10\PPKK_Lab10\obj\Debug\PPKK_Lab10.pdb
+D:\Study\5_course\II_semestr\labs\PPKK\2 С#\PPKK_Lab10\PPKK_Lab10\bin\Debug\Properties\AssemblyInfo.cs
+D:\Study\5_course\II_semestr\labs\PPKK\2 С#\PPKK_Lab10\PPKK_Lab10\bin\Debug\PPKK_Lab10.exe
+D:\Study\5_course\II_semestr\labs\PPKK\2 С#\PPKK_Lab10\PPKK_Lab10\bin\Debug\PPKK_Lab10.pdb
+D:\Study\5_course\II_semestr\labs\PPKK\2 С#\PPKK_Lab10\PPKK_Lab10\obj\Debug\PPKK_Lab10.csprojResolveAssemblyReference.cache
+D:\Study\5_course\II_semestr\labs\PPKK\2 С#\PPKK_Lab10\PPKK_Lab10\obj\Debug\PPKK_Lab10.exe
+D:\Study\5_course\II_semestr\labs\PPKK\2 С#\PPKK_Lab10\PPKK_Lab10\obj\Debug\PPKK_Lab10.pdb

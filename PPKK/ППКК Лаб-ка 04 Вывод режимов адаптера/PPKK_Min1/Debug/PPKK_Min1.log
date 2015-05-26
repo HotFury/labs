@@ -1,0 +1,32 @@
+﻿Сборка начата 04.05.2015 16:12:39.
+     1>Проект "D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\1 С++\ППКК Лаб-ки (Projects)\ППКК Лаб-ки под MSVS(2003-2010)\ППКК Лаб-ка 04 Вывод режимов адаптера\PPKK_Min1\PPKK_Min1.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug/" /Fd".\Debug/vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\PPKK_Min1.cpp
+         PPKK_Min1.cpp
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(53): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(61): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(106): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(117): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(231): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(233): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(237): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(244): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+     1>d:\labs\10 ctvtcnh\2015 - ппкк\5 ппкк лаб-ки\1 с++\ппкк лаб-ки (projects)\ппкк лаб-ки под msvs(2003-2010)\ппкк лаб-ка 04 вывод режимов адаптера\ppkk_min1.cpp(247): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356): см. объявление "sprintf"
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Debug/PPKK_Min1.exe" /INCREMENTAL:NO /NOLOGO odbc32.lib odbccp32.lib dxguid.lib ddraw.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Debug/PPKK_Min1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Debug\PPKK_Min1.lib" /MACHINE:X86 /SAFESEH .\Debug/PPKK_Min1.obj
+     1>PPKK_Min1.obj : warning LNK4075: не учитывается "/EDITANDCONTINUE" из-за спецификации "/OPT:LBR"
+         PPKK_Min1.vcxproj -> D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\1 С++\ППКК Лаб-ки (Projects)\ППКК Лаб-ки под MSVS(2003-2010)\ППКК Лаб-ка 04 Вывод режимов адаптера\PPKK_Min1\.\Debug\PPKK_Min1.exe
+     1>Сборка проекта "D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\1 С++\ППКК Лаб-ки (Projects)\ППКК Лаб-ки под MSVS(2003-2010)\ППКК Лаб-ка 04 Вывод режимов адаптера\PPKK_Min1\PPKK_Min1.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:00.51
