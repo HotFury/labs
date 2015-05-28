@@ -171,6 +171,10 @@ namespace nk_lab_7
             {
                 return weight;
             }
+            set
+            {
+                weight = value;
+            }
         }
         public void InitOut()
         {
@@ -197,23 +201,17 @@ namespace nk_lab_7
         }
         public void WeightInit(int count, decimal val)
         {
-            
-            //WeightReset();
             for (int i = 0; i < count; i++)
             {
                 SetWeight(val);
             }
-            //WriteToLog(weight.ToArray(), neurName, num);
         }
         public void WeightInit(decimal val, string neurName, int num)
         {
-
-            //WeightReset();
-            //for (int i = 0; i < count; i++)
             {
                 SetWeight(val);
             }
-            WriteToLog(weight.ToArray(), neurName, num);
+            //WriteToLog(weight.ToArray(), neurName, num);
         }
         public void WriteWeightToLog(int neuronNum, string neuronName)
         {
@@ -221,7 +219,7 @@ namespace nk_lab_7
         }
         public void WritePrevWeightToLog(int neuronNum, string neuronName)
         {
-            WriteToLog(PrevWeight.ToArray(), neuronName+"pr", neuronNum);
+            //WriteToLog(PrevWeight.ToArray(), neuronName+"pr", neuronNum);
         }
         public void SaveWeights()
         {
@@ -266,6 +264,15 @@ namespace nk_lab_7
         public void WeightCorrect(int winNum)
         {
             Weight[winNum] = Output;
+        }
+        public void DeleteUnuse(List<int> clusterNums)
+        {
+            List<decimal> usefull = new List<decimal>();
+            foreach (int num in clusterNums)
+            {
+                usefull.Add(Weight[num]);
+            }
+            Weight = usefull;
         }
     }
     partial class Y_neuron : Neuron
@@ -318,7 +325,7 @@ namespace nk_lab_7
         private List<Y_neuron> y_neuron;
         private int m;
         private int n;
-        //private int q;
+        private List<int> clusterNums = new List<int>();
         private decimal p;
         private int L;
         private int maxEpochCount;
@@ -332,7 +339,7 @@ namespace nk_lab_7
         }
         public ART_1()
         {
-            m = 0;//Constants.lettersCount;
+            m = 0;
             n = 0;
             p = 0;
             L = 0;
@@ -444,7 +451,7 @@ namespace nk_lab_7
         public void Teach(List<List<int>> standarts, ref System.Windows.Forms.ProgressBar progBar)
         {
             epochCount++;
-
+            //WriteToLogString("===========EPOCH #" + epochCount.ToString() + "===========");
             for (int j = 0; j < standarts.Count; j++)
             {
                 if (epochCount == 1)
@@ -452,20 +459,21 @@ namespace nk_lab_7
                     m++;
                     decimal weightValY = 1m / (1 + n);
                     decimal weightValZ = 1;
-                    WriteToLogString("========Y to Z neuron weigths initalization========");
-                    WriteToLogHead(m, "w", 5);
+                    //WriteToLogString("========Y to Z neuron weigths initalization========");
+                    //WriteToLogHead(m, "w", 5);
                     for (int i = 0; i < n; i++)
                     {
                         z_neuron[i].WeightInit(weightValZ, "Z", i);
                     }
-                    WriteToLogString("========Z to Y neuron weigths initalization========");
-                    WriteToLogHead(n, "w", 5);
+                    //WriteToLogString("========Z to Y neuron weigths initalization========");
+                    //WriteToLogHead(n, "w", 5);
                     y_neuron.Add(new Y_neuron());
                     y_neuron[y_neuron.Count - 1].WeightInit(n, weightValY);
                     for (int i = 0; i < y_neuron.Count; i++)
                     {
                         y_neuron[i].WriteWeightToLog(y_neuron.Count - 1, "Y");
                     }
+                    //WriteToLog(standarts[j].ToArray(), "let", j);
                 }
                 sensor = new List<Sensor>();
                 for (int i = 0; i < n; i++)
@@ -509,7 +517,6 @@ namespace nk_lab_7
                     }
 
                     winNum = GetAltNum(sensNorm, winNum, ZNorm);
-                    //MessageBox.Show("Sign №" + (j + 1).ToString() + " is to " + (winNum + 1).ToString() + " claster");
                     y_neuron[winNum].WeightCorerct(L, z_neuron, ZNorm);
                     for (int i = 0; i < z_neuron.Count; i++)
                     {
@@ -517,21 +524,21 @@ namespace nk_lab_7
                         progBar.PerformStep();
                         z_neuron[i].WeightCorrect(winNum);
                     }
-                    WriteToLogString("========Y to Z neuron weigths correction========");
-                    WriteToLogHead(m, "w", 5);
+                    //WriteToLogString("========Y to Z neuron weigths correction========");
+                    //WriteToLogHead(m, "w", 5);
                     for (int i = 0; i < z_neuron.Count; i++)
                     {
                         progBar.Maximum++;
                         progBar.PerformStep();
-                        z_neuron[i].WriteWeightToLog(i, "Z");
+                        //z_neuron[i].WriteWeightToLog(i, "Z");
                     }
-                    WriteToLogString("========Z to Y neuron weigths correctinon========");
-                    WriteToLogHead(n, "w", 5);
+                    //WriteToLogString("========Z to Y neuron weigths correctinon========");
+                    //WriteToLogHead(n, "w", 5);
                     for (int i = 0; i < y_neuron.Count; i++)
                     {
                         progBar.Maximum++;
                         progBar.PerformStep();
-                        y_neuron[i].WriteWeightToLog(i, "Y");
+                        //y_neuron[i].WriteWeightToLog(i, "Y");
                     }
                 }
             }
@@ -545,22 +552,49 @@ namespace nk_lab_7
             sensor = new List<Sensor>();
             for (int i = 0; i < n; i++)
             {
-                /*progBar.Maximum++;
-                progBar.PerformStep();*/
                 sensor.Add(new Sensor(letter[i]));
                 z_neuron[i].InitInput(sensor[i].Input);
                 z_neuron[i].InitOut();
             }
-            int sensNorm = GetVectorNorm(sensor);
-            for (int i = 0; i < m; i++)
+            for (int i = 0; i < y_neuron.Count; i++)
             {
-                /*progBar.Maximum++;
-                progBar.PerformStep();*/
                 y_neuron[i].InitOut(0m);
                 y_neuron[i].CalculateInput(z_neuron);
                 y_neuron[i].InitOut();
             }
-            return GetWinnerNum();
+            int clust = GetWinnerNum();
+            if (!clusterNums.Contains(clust))
+                clusterNums.Add(clust);
+            return clust;
+        }
+        public void DeleteUnuse()
+        {
+            List<Y_neuron> usefull = new List<Y_neuron>();
+            foreach (int num in clusterNums)
+            {
+                usefull.Add(y_neuron[num]);
+            }
+            y_neuron = usefull;
+            for (int i = 0; i < z_neuron.Count; i++)
+            {
+                z_neuron[i].DeleteUnuse(clusterNums);
+            }
+        }
+        public void WriteWeights()
+        {
+            for (int i = 0; i < y_neuron.Count; i++)
+            {
+                y_neuron[i].WriteWeightToLog(i, "Y");
+            }
+            for (int i = 0; i < z_neuron.Count; i++)
+            {
+                z_neuron[i].WriteWeightToLog(i, "Z");
+            }
+            
+        }
+        public int GetY_nuronCount()
+        {
+            return y_neuron.Count;
         }
     }
     partial class Form1
@@ -600,10 +634,10 @@ namespace nk_lab_7
             this.showCheck = new System.Windows.Forms.Button();
             this.test = new System.Windows.Forms.Button();
             this.teach = new System.Windows.Forms.Button();
-            this.recognize = new System.Windows.Forms.Button();
+            //this.recognize = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.signs = new System.Windows.Forms.Label[Constants.lettersCount];
-            this.toRecSign = new System.Windows.Forms.Label();
+            //this.toRecSign = new System.Windows.Forms.Label();
             this.maxEpochValue = new TextBox();
             this.maxEpoch = new Label();
             this.LValue = new TextBox();
@@ -622,12 +656,12 @@ namespace nk_lab_7
                 }
                 this.letters.Add(letter);
             }
-            this.standart = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
-            for (int i = 0; i < Constants.maxInputCount; i++)
+            //this.standart = new System.Windows.Forms.CheckBox[Constants.maxInputCount];
+            /*for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 this.standart[i] = new System.Windows.Forms.CheckBox();
-            }
-
+            }*/
+            this.clustInfo = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
 
             //
@@ -641,17 +675,18 @@ namespace nk_lab_7
                 this.signs[i].Name = "signs" + i.ToString();
                 this.signs[i].Size = new System.Drawing.Size(35, 13);
                 this.signs[i].TabIndex = 0;
-                this.signs[i].Text = "Sing №" + (i + 1);
+                this.signs[i].Text = "Sign №" + (i + 1);
             }
             //
             //toRecSign
             //
+            /*
             this.toRecSign.AutoSize = true;
             this.toRecSign.Location = new System.Drawing.Point(5, 5);
             this.toRecSign.Name = "toRecSign";
             this.toRecSign.Size = new System.Drawing.Size(32, 13);
             this.toRecSign.TabIndex = 5;
-            this.toRecSign.Text = "for rcognize";
+            this.toRecSign.Text = "for rcognize";*/
             // 
             // heightValue
             // 
@@ -712,21 +747,23 @@ namespace nk_lab_7
             //
             this.teach.Location = new System.Drawing.Point(0, 0);
             this.teach.Name = "tech";
-            this.teach.Size = new System.Drawing.Size(75, 23);
+            this.teach.Size = new System.Drawing.Size(75, 46);
             this.teach.TabIndex = 8;
-            this.teach.Text = "To clusters";
+            this.teach.Text = "Make clusters";
             this.teach.UseVisualStyleBackColor = true;
             this.teach.Click += new System.EventHandler(this.teach_Click);
             //
             // recognize
             //
+            /*
             this.recognize.Location = new System.Drawing.Point(0, 0);
             this.recognize.Name = "recognize";
             this.recognize.Size = new System.Drawing.Size(75, 23);
             this.recognize.TabIndex = 9;
             this.recognize.Text = "Recognize";
             this.recognize.UseVisualStyleBackColor = true;
-            this.recognize.Click += new System.EventHandler(this.recognize_Click);
+             * */
+            //this.recognize.Click += new System.EventHandler(this.recognize_Click);
             //
             //about
             //
@@ -750,11 +787,11 @@ namespace nk_lab_7
                     letters[j][i].ThreeState = true;
                     letters[j][i].UseVisualStyleBackColor = true;
                 }
-                this.standart[i].AutoSize = true;
-                this.standart[i].Location = new System.Drawing.Point(13, 6);
-                this.standart[i].Size = new System.Drawing.Size(80, 17);
-                this.standart[i].ThreeState = true;
-                this.standart[i].UseVisualStyleBackColor = true;
+                //this.standart[i].AutoSize = true;
+                //this.standart[i].Location = new System.Drawing.Point(13, 6);
+                //this.standart[i].Size = new System.Drawing.Size(80, 17);
+                //this.standart[i].ThreeState = true;
+                //this.standart[i].UseVisualStyleBackColor = true;
             }
 
 
@@ -828,6 +865,18 @@ namespace nk_lab_7
             this.loadLabel.Visible = false;
             this.loadLabel.Text = "Progress:";
 
+
+            // 
+            // clustInfo
+            // 
+            this.clustInfo.Location = new System.Drawing.Point(107, 89);
+            this.clustInfo.Name = "clustInfo";
+            this.clustInfo.Size = new System.Drawing.Size(600, 300);
+            this.clustInfo.TabIndex = 1;
+            this.clustInfo.Text = "clusters will be here";
+            this.clustInfo.Visible = false;
+            this.clustInfo.Font = new System.Drawing.Font("Courier new", 9);
+            
             // 
             // pictureBox1
             // 
@@ -842,7 +891,7 @@ namespace nk_lab_7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 450);
+            this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Adaptive resonance theory";
@@ -850,7 +899,7 @@ namespace nk_lab_7
             this.Controls.Add(this.showCheck);
             this.Controls.Add(this.test);
             this.Controls.Add(this.teach);
-            this.Controls.Add(this.recognize);
+            //this.Controls.Add(this.recognize);
             this.Controls.Add(this.about);
             this.Controls.Add(this.width);
             this.Controls.Add(this.widthValue);
@@ -871,14 +920,14 @@ namespace nk_lab_7
                 {
                     this.Controls.Add(letters[j][i]);
                 }
-                this.Controls.Add(this.standart[i]);
+                //this.Controls.Add(this.standart[i]);
             }
-
+            this.Controls.Add(this.clustInfo);
             for (int i = 0; i < signs.Length; i++)
             {
                 this.Controls.Add(this.signs[i]);
             }
-            this.Controls.Add(this.toRecSign);
+            //this.Controls.Add(this.toRecSign);
             this.ResumeLayout(false);
 
         }
@@ -886,24 +935,25 @@ namespace nk_lab_7
         {
             this.loading.Visible = true;
             this.loadLabel.Visible = true;
+            
             for (int i = 0; i < Constants.maxInputCount; i++)
             {
                 for (int j = 0; j < letters.Count; j++)
                 {
                     letters[j][i].Location = new System.Drawing.Point(5, 5);
-                    standart[i].Location = new System.Drawing.Point(5, 5);
+                    //standart[i].Location = new System.Drawing.Point(5, 5);
                     letters[j][i].CheckState = System.Windows.Forms.CheckState.Unchecked;
-                    standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
+                    //standart[i].CheckState = System.Windows.Forms.CheckState.Unchecked;
                 }
             }
             for (int i = 0; i < signs.Length; i++)
             {
                 signs[i].Location = new System.Drawing.Point(5, 5);
             }
-            toRecSign.Location = new System.Drawing.Point(5, 5);
+            //toRecSign.Location = new System.Drawing.Point(5, 5);
             //this.showCheck.Location = new System.Drawing.Point(0, 0);
             this.teach.Location = new System.Drawing.Point(10, 100);
-            this.recognize.Location = new System.Drawing.Point(10, 125);
+            //this.recognize.Location = new System.Drawing.Point(10, 125);
             int width = letterWidth;
             count = letterHeight * letterWidth;
             int y = 130;
@@ -925,13 +975,15 @@ namespace nk_lab_7
                 {
                     letters[j][i].Location = new System.Drawing.Point(x + j * offset, y);
                 }
-                this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
+                //this.standart[i].Location = new System.Drawing.Point(x + letters.Count * offset + step, y);
             }
             for (int i = 0; i < signs.Length; i++)
             {
                 signs[i].Location = new System.Drawing.Point(letters[i][0].Location.X, y + 15);
             }
-            toRecSign.Location = new System.Drawing.Point(standart[0].Location.X, y + 15);
+            clustInfo.Location = new System.Drawing.Point(signs[0].Location.X, signs[0].Location.Y + 25);
+            //toRecSign.Location = new System.Drawing.Point(standart[0].Location.X, y + 15);
+            this.clustInfo.Visible = true;
         }
         #endregion
 
@@ -942,15 +994,15 @@ namespace nk_lab_7
         protected System.Windows.Forms.TextBox heightValue;
         protected System.Windows.Forms.TextBox widthValue;
         protected List<System.Windows.Forms.CheckBox[]> letters = new List<System.Windows.Forms.CheckBox[]>();
-        protected System.Windows.Forms.CheckBox[] standart;
+        //protected System.Windows.Forms.CheckBox[] standart;
         protected System.Windows.Forms.Button showCheck;
         protected System.Windows.Forms.Button test;
         protected System.Windows.Forms.Button teach;
-        protected System.Windows.Forms.Button recognize;
+        //protected System.Windows.Forms.Button recognize;
         protected System.Windows.Forms.Button about;
 
         protected System.Windows.Forms.Label[] signs;
-        protected System.Windows.Forms.Label toRecSign;
+        //protected System.Windows.Forms.Label toRecSign;
 
         protected int count;
 
@@ -964,6 +1016,8 @@ namespace nk_lab_7
         protected System.Windows.Forms.Label maxEpoch;
         protected System.Windows.Forms.Label pLabel;
         protected System.Windows.Forms.Label L;
+
+        private System.Windows.Forms.RichTextBox clustInfo;
     }
 }
 

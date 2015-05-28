@@ -527,7 +527,7 @@ namespace nk_lab_1
                 this.signs[i].Name = "signs" + i.ToString();
                 this.signs[i].Size = new System.Drawing.Size(35, 13);
                 this.signs[i].TabIndex = 0;
-                this.signs[i].Text = "Sing №" + (i + 1);
+                this.signs[i].Text = "Sign №" + (i + 1);
             }
             //
             //toRecSign
