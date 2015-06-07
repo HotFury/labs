@@ -1,0 +1,28 @@
+Проект 
+  20-DelayLoadApp
+надо создать на базе файлов 2-х проектов:
+  20-DelayLoadApp\*.*
+  20-DelayLoadLib\*.*
+
+Для этого надо:
+1) На базе файла '20 DelayLoadApp.dsp' создать 
+   20-DelayLoadApp Project в MSVSv7(2003)
+2) Ввести в него еще один Project - 20-DelayLoadLib:
+   в File\Add Project\Existing Project\... 
+   выбрать в окне выбора файла \20-DelayLoadLib\20 DelayLoadLib.dsp
+3) Для объединенных Project надо задать их взаимозависимость
+   (последовательность работы компилятора):
+   в окне Solution Explorer (перечень Project-файлов)
+    - выделить строку:'20-DelayLoadApp'(название группы Project-файлов)
+    - нажать правую клавишу мышки и в появившемся меню выбрать пункт   
+        Project Dependencias ...
+    - в подокне диалога: 'Depends on:' выделить ('птичкой') строку
+        20-DelayLoadLib 
+        ( = файлы из '20-DelayLoadLib' надо компилировать первыми)
+
+PS:
+В файле DelayLoadApp.cpp исправлена ошибка книги:
+ изменено имя функции (на строке 87)
+        __FUnloadDelayLoadedDLL(.......);
+ на
+        __FUnloadDelayLoadedDLL2(.......);

@@ -1,0 +1,40 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20 DelayLoadApp", "20 DelayLoadApp.vcproj", "{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A} = {CDBA59C7-273B-4D50-837A-8ABACD46112A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20 DelayLoadLib", "..\20-DelayLoadLib\20 DelayLoadLib.vcproj", "{CDBA59C7-273B-4D50-837A-8ABACD46112A}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Alpha32 Debug = Alpha32 Debug
+		Alpha32 Release = Alpha32 Release
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Alpha32 Debug.ActiveCfg = Alpha32 Debug|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Alpha32 Debug.Build.0 = Alpha32 Debug|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Alpha32 Release.ActiveCfg = Alpha32 Release|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Alpha32 Release.Build.0 = Alpha32 Release|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Debug.ActiveCfg = Debug|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Debug.Build.0 = Debug|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Release.ActiveCfg = Release|Win32
+		{2C1C6A40-652C-47C3-83AA-8B944EE68CD0}.Release.Build.0 = Release|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Alpha32 Debug.ActiveCfg = Alpha32 Debug|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Alpha32 Debug.Build.0 = Alpha32 Debug|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Alpha32 Release.ActiveCfg = Alpha32 Release|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Alpha32 Release.Build.0 = Alpha32 Release|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Debug.ActiveCfg = Debug|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Debug.Build.0 = Debug|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Release.ActiveCfg = Release|Win32
+		{CDBA59C7-273B-4D50-837A-8ABACD46112A}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

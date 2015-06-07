@@ -1,0 +1,14 @@
+﻿Build started 04-Jun-15 01:22:31.
+     1>Project "D:\Study\5_course\II_semestr\labs\PSOK\15-VMAlloc\15 VMAlloc.vcxproj" on node 2 (Build target(s)).
+     1>ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _DEBUG /l"0x0409" /nologo /fo".\Debug\VMAlloc.res" VMAlloc.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\Alpha32\Debug/15 VMAlloc.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\..\Alpha32\Debug/15 VMAlloc.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\Alpha32\Debug\15 VMAlloc.lib" /MACHINE:X86 /SAFESEH .\Debug\VMAlloc.res
+         .\Debug/VMAlloc.obj
+     1>VMAlloc.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+         15 VMAlloc.vcxproj -> D:\Study\5_course\II_semestr\labs\PSOK\15-VMAlloc\.\..\Alpha32\Debug\15 VMAlloc.exe
+     1>Done Building Project "D:\Study\5_course\II_semestr\labs\PSOK\15-VMAlloc\15 VMAlloc.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.15

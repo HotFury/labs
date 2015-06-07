@@ -1,0 +1,23 @@
+﻿Build started 01-Jun-15 17:50:15.
+     1>Project "D:\Study\5_course\II_semestr\labs\PSOK\14-VMStat\14 VMStat.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug/" /Fd".\Debug/vc120.pdb" /Gd /TP /analyze- /errorReport:prompt VMStat.cpp
+         VMStat.cpp
+     1>d:\study\5_course\ii_semestr\labs\psok\14-vmstat\cmnhdr.h(224): warning C4996: 'GetVersionExA': was declared deprecated
+                 c:\program files (x86)\windows kits\8.1\include\um\sysinfoapi.h(433) : see declaration of 'GetVersionExA'
+     1>d:\study\5_course\ii_semestr\labs\psok\14-vmstat\cmnhdr.h(234): warning C4996: 'GetVersionExA': was declared deprecated
+                 c:\program files (x86)\windows kits\8.1\include\um\sysinfoapi.h(433) : see declaration of 'GetVersionExA'
+     1>d:\study\5_course\ii_semestr\labs\psok\14-vmstat\vmstat.cpp(50): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'sprintf'
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _DEBUG /l"0x0409" /nologo /fo".\Debug\VMStat.res" VMStat.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\Alpha32\Debug/14 VMStat.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\..\Alpha32\Debug/14 VMStat.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\Alpha32\Debug\14 VMStat.lib" /MACHINE:X86 /SAFESEH .\Debug\VMStat.res
+         .\Debug/VMStat.obj
+     1>VMStat.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+         14 VMStat.vcxproj -> D:\Study\5_course\II_semestr\labs\PSOK\14-VMStat\.\..\Alpha32\Debug\14 VMStat.exe
+     1>Done Building Project "D:\Study\5_course\II_semestr\labs\PSOK\14-VMStat\14 VMStat.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.61

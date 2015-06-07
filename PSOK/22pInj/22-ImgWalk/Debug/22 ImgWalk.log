@@ -1,0 +1,11 @@
+﻿Build started 28-May-15 20:59:08.
+     1>Project "D:\Study\5_course\II_semestr\labs\PSOK\22pInj\22-ImgWalk\22 ImgWalk.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\x86\Debug/22 ImgWalk.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\..\x86\Debug/22 ImgWalk.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\x86\Debug/22 ImgWalk.lib" /MACHINE:X86 /SAFESEH /DLL .\Debug/ImgWalk.obj
+     1>ImgWalk.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+         22 ImgWalk.vcxproj -> D:\Study\5_course\II_semestr\labs\PSOK\22pInj\22-ImgWalk\.\..\x86\Debug\22 ImgWalk.dll
+     1>Done Building Project "D:\Study\5_course\II_semestr\labs\PSOK\22pInj\22-ImgWalk\22 ImgWalk.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.51

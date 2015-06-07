@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15 VMAlloc", "15 VMAlloc.vcproj", "{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Alpha32 Debug = Alpha32 Debug
+		Alpha32 Release = Alpha32 Release
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Alpha32 Debug.ActiveCfg = Alpha32 Debug|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Alpha32 Debug.Build.0 = Alpha32 Debug|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Alpha32 Release.ActiveCfg = Alpha32 Release|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Alpha32 Release.Build.0 = Alpha32 Release|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Debug.ActiveCfg = Debug|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Debug.Build.0 = Debug|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Release.ActiveCfg = Release|Win32
+		{B8D6D008-9CD7-481F-8F3A-28EEB4DBABFC}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
