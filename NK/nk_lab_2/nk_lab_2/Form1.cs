@@ -52,7 +52,7 @@ namespace nk_lab_2
                 inputSize = letterHeight * letterWidth;
                 perceptron = new Perceptron(inputSize, associatorCount);
                 initialWeights = new decimal[associatorCount];
-                perceptron.Step = Convert.ToDecimal(stepValue.Text);
+                perceptron.Step = Convert.ToDecimal(stepValue.Text.Replace(',','.'));
                 MakeLetters(letterHeight, letterWidth);
                 File.WriteAllText("log.txt", "");
                 perceptron.WriteToLogString("=======INITIALIZATION=======");

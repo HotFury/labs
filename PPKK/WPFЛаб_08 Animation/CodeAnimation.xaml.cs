@@ -46,7 +46,7 @@ namespace Animation
             //cmdGrow.BeginAnimation(Button.WidthProperty, null);
             //cmdGrow.Width = currentWidth;
 
-            //MessageBox.Show("Completed!");
+            MessageBox.Show("Completed!");
         }
 
         private void cmdShrink_Click(object sender, RoutedEventArgs e)

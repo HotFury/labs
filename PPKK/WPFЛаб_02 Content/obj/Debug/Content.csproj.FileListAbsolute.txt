@@ -36,3 +36,5 @@ D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\3 WPF(C#,xaml на Dir
 D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\3 WPF(C#,xaml на DirectX)\WPF_Projects(Лаб-ки по ППКК, Е.А.Лобода)MSVS\WPFЛаб_02 Content\obj\Debug\Content.csproj.GenerateResource.Cache
 D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\3 WPF(C#,xaml на DirectX)\WPF_Projects(Лаб-ки по ППКК, Е.А.Лобода)MSVS\WPFЛаб_02 Content\obj\Debug\Content.exe
 D:\Labs\10 ctvtcnh\2015 - ППКК\5 ППКК Лаб-ки\3 WPF(C#,xaml на DirectX)\WPF_Projects(Лаб-ки по ППКК, Е.А.Лобода)MSVS\WPFЛаб_02 Content\obj\Debug\Content.pdb
+D:\Study\5_course\II_semestr\labs\PPKK\WPFЛаб_02 Content\obj\Debug\Content.exe
+D:\Study\5_course\II_semestr\labs\PPKK\WPFЛаб_02 Content\obj\Debug\Content.pdb
