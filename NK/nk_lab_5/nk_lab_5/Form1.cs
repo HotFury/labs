@@ -42,9 +42,9 @@ namespace nk_lab_5
                 string firstNameVal = firstName.Text;
                 string middleNameVal = middleName.Text;
                 string surNameVal = surName.Text;
-                double alphaVal = Convert.ToDouble(alphaValue.Text);
-                int radiusVal = Convert.ToInt32(rValue.Text);
-                double coeff = Convert.ToDouble(kValue.Text);
+                double alphaVal = 0.8;//Convert.ToDouble(alphaValue.Text);
+                int radiusVal = 0;//Convert.ToInt32(rValue.Text);
+                double coeff = 0.25;//Convert.ToDouble(kValue.Text);
                 List<string> rows = new List<string>();
                 List<List<int>> vectors = new List<List<int>>();
                 rows.Add(firstNameVal);
